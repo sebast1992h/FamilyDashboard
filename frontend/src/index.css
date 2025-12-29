@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-main: #181a1b;
+  --bg-card: #232526;
+  --text-main: #e0e0e0;
+  --accent: #4fd1c5;
+  --accent2: #2d3748;
+  --border: #333;
+  --table-header: #232526;
+  --table-row: #181a1b;
+  --table-row-alt: #232526;
+}
+
+body {
+  background: var(--bg-main);
+  color: var(--text-main);
+}
+
+.card {
+  background: var(--bg-card);
+  border-radius: 1rem;
+  box-shadow: 0 2px 16px #0006;
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  color: var(--text-main);
+}
+
+th, td {
+  border-color: var(--border) !important;
+  color: var(--text-main) !important;
+}
+
+th {
+  background: var(--table-header) !important;
+}
+
+tr {
+  background: var(--table-row);
+}
+tr:nth-child(even) {
+  background: var(--table-row-alt);
+}
+
+input, button, select {
+  background: var(--bg-main);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+}
+
+input:focus, button:focus, select:focus {
+  outline: 2px solid var(--accent);
+}
+
+nav {
+  background: var(--accent2) !important;
+  color: var(--accent) !important;
+}
+
+button {
+  background: var(--accent2);
+  color: var(--accent);
+  border-radius: 0.5rem;
+  transition: background 0.2s;
+}
+button:hover {
+  background: var(--accent);
+  color: var(--bg-main);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent2);
+  border-radius: 4px;
+}

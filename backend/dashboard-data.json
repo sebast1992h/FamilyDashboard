@@ -1,0 +1,199 @@
+{
+  "calendarIcalUrl": "https://calendar.google.com/calendar/ical/hose3d4o87ktt7f74l4nhenaf4%40group.calendar.google.com/private-94bc47a2f16e9211999dce40415ffaf2/basic.ics",
+  "family": [
+    "Papa",
+    "Mama",
+    "Hanna",
+    "Luisa",
+    "Abel"
+  ],
+  "todos": [
+    {
+      "text": "Pool Winterfest machen",
+      "done": false
+    },
+    {
+      "text": "Tür Esszimmer reparieren",
+      "done": false
+    },
+    {
+      "text": "Dusche reparieren",
+      "done": false
+    }
+  ],
+  "mealplan": [
+    [
+      "Porridge",
+      "Salat",
+      "Brot / Salat"
+    ],
+    [
+      "Porridge",
+      "Würstchen",
+      "Brot / Salat"
+    ],
+    [
+      "Porridge",
+      "Nudeln",
+      "Brot / Salat"
+    ],
+    [
+      "Porridge",
+      "Kartoffeln",
+      "Brot / Salat"
+    ],
+    [
+      "Porridge",
+      "Auflauf",
+      "Brot / Salat"
+    ],
+    [
+      "Porridge",
+      "Grillen",
+      "Brot / Salat"
+    ],
+    [
+      "Porridge",
+      "Raclette",
+      "Brot / Salat"
+    ]
+  ],
+  "termine": [
+    [
+      null,
+      null,
+      "Matschsachen"
+    ],
+    [
+      null,
+      null,
+      ""
+    ],
+    [],
+    [
+      null,
+      null,
+      ""
+    ],
+    [
+      null,
+      null,
+      "Matschsachen"
+    ],
+    [
+      null,
+      ""
+    ],
+    []
+  ],
+  "standardItems": [
+    {
+      "name": "Küche putzen",
+      "icon": "🍳"
+    },
+    {
+      "name": "Bad putzen",
+      "icon": "🛁"
+    },
+    {
+      "name": "Flur putzen",
+      "icon": "🚪"
+    },
+    {
+      "name": "Turnen",
+      "icon": "🤸"
+    },
+    {
+      "name": "Büro",
+      "icon": "💻"
+    },
+    {
+      "name": "Kita",
+      "icon": "🎒"
+    },
+    {
+      "name": "Spielgruppe",
+      "icon": "🧩"
+    },
+    {
+      "name": "Esszimmer putzen",
+      "icon": "🍽️"
+    }
+  ],
+  "standardItemPlan": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ],
+  "standardItemPersonPlan": [
+    [
+      [],
+      [],
+      [
+        5
+      ],
+      [],
+      []
+    ],
+    [
+      [
+        4
+      ],
+      [
+        1
+      ],
+      [
+        5
+      ],
+      [],
+      []
+    ],
+    [
+      [],
+      [],
+      [
+        5
+      ],
+      [],
+      []
+    ],
+    [
+      [
+        3
+      ],
+      [],
+      [
+        3,
+        5
+      ],
+      [],
+      []
+    ],
+    [
+      [
+        4
+      ],
+      [],
+      [
+        5
+      ],
+      [],
+      []
+    ],
+    [
+      [],
+      [
+        0
+      ],
+      [],
+      [],
+      []
+    ],
+    []
+  ],
+  "refreshInterval": 5
+}
