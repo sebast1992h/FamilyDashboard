@@ -149,12 +149,22 @@ export default function App() {
                   </tr>
                   <tr>
                     <th className="border p-1"></th>
-                    {days.map((_, i) => {
+                    {(() => {
+                      // Aktuelles Datum
                       const now = new Date();
-                      const date = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
-                      const dayStr = date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                      return <th key={i} className="border p-1 text-xs text-gray-500">{dayStr}</th>;
-                    })}
+                      // Tag der Woche (0=So, 1=Mo, ..., 6=Sa)
+                      const dayOfWeek = now.getDay();
+                      // Offset auf Montag (Mo=1, So=0)
+                      const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+                      // Datum des Montags dieser Woche
+                      const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() + mondayOffset);
+                      // Für jeden Tag der Woche das Datum berechnen
+                      return days.map((_, i) => {
+                        const date = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
+                        const dayStr = date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                        return <th key={i} className="border p-1 text-xs text-gray-500">{dayStr}</th>;
+                      });
+                    })()}
                   </tr>
                 </thead>
                 <tbody>
