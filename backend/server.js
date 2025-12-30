@@ -82,14 +82,19 @@ app.get("/api/calendar", async (req, res) => {
     // Setze now auf Mitternacht (lokal)
     const now = new Date();
     now.setHours(0,0,0,0);
+    // Finde Montag dieser Woche
+    const dayOfWeek = now.getDay();
+    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() + mondayOffset);
+    monday.setHours(0,0,0,0);
     for (const k in events) {
       const ev = events[k];
       if (ev.type === 'VEVENT' && ev.start) {
         const start = new Date(ev.start);
         // Setze start auf Mitternacht (lokal)
         start.setHours(0,0,0,0);
-        // Tag im Bereich der aktuellen Woche?
-        const diff = Math.round((start - now) / (1000*60*60*24));
+        // Tag im Bereich der aktuellen Woche (Montag=0)
+        const diff = Math.round((start - monday) / (1000*60*60*24));
         if (diff >= 0 && diff < 7) {
           // Versuche, den Termin einem Familienmitglied zuzuordnen
           let matched = false;
