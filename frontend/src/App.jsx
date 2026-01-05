@@ -307,7 +307,15 @@ export default function App() {
                         <td className="border p-1 font-semibold">{day}</td>
                         {meals.map((_, mealIdx) => (
                           <td className="border p-1" key={mealIdx}>
-                            {config.mealplan && config.mealplan[dayIdx] ? config.mealplan[dayIdx][mealIdx] : ""}
+                            {(() => {
+                              const meal = config.mealplan && config.mealplan[dayIdx] ? config.mealplan[dayIdx][mealIdx] : null;
+                              if (!meal) return "";
+                              if (typeof meal === "string") return meal;
+                              if (meal.link) {
+                                return <a href={meal.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">{meal.name || meal.link}</a>;
+                              }
+                              return meal.name || "";
+                            })()}
                           </td>
                         ))}
                       </tr>

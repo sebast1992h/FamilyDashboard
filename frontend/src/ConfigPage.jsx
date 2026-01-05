@@ -5,10 +5,60 @@ const days = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samsta
 const meals = ["Morgens", "Mittags", "Abends"];
 
 export default function ConfigPage({ onSave, config, isAuthenticated, onLogin, onBack }) {
+    // --- Essensplan-Popup-Logik ---
+    const [mealplanEdit, setMealplanEdit] = useState(null);
+    function handleMealplanObjChange(dayIdx, mealIdx, field, value) {
+      const newPlan = localConfig.mealplan ? localConfig.mealplan.map(row => [...row]) : Array(7).fill(0).map(() => Array(3).fill(""));
+      let meal = newPlan[dayIdx][mealIdx];
+      if (!meal || typeof meal === "string") meal = { name: meal || "", link: "" };
+      meal = { ...meal, [field]: value };
+      newPlan[dayIdx][mealIdx] = meal;
+      setLocalConfig({ ...localConfig, mealplan: newPlan });
+    }
+    function handleMealplanEditClose() {
+      setMealplanEdit(null);
+    }
+    function renderMealplanEditPopup() {
+      if (!mealplanEdit) return null;
+      const { dayIdx, mealIdx } = mealplanEdit;
+      const meal = localConfig.mealplan && localConfig.mealplan[dayIdx] ? localConfig.mealplan[dayIdx][mealIdx] : { name: "", link: "" };
+      const val = typeof meal === "string" ? { name: meal, link: "" } : meal;
+      return (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30">
+          <div
+            className="p-6 rounded shadow-lg min-w-[300px]"
+            style={{ background: 'var(--bg-main)', color: 'var(--text-main)' }}
+          >
+            <h3 className="font-bold mb-2" style={{ color: 'var(--accent)' }}>
+              Rezept für {days[dayIdx]}, {meals[mealIdx]}
+            </h3>
+            <label className="block mb-1">Name:</label>
+            <input
+              className="border p-1 w-full mb-2"
+              value={val.name}
+              onChange={e => handleMealplanObjChange(dayIdx, mealIdx, "name", e.target.value)}
+              placeholder="Gericht"
+              style={{ background: 'var(--bg-main)', color: 'var(--text-main)' }}
+            />
+            <label className="block mb-1">Rezept-Link:</label>
+            <input
+              className="border p-1 w-full mb-2"
+              value={val.link}
+              onChange={e => handleMealplanObjChange(dayIdx, mealIdx, "link", e.target.value)}
+              placeholder="https://..."
+              style={{ background: 'var(--bg-main)', color: 'var(--text-main)' }}
+            />
+            <div className="flex justify-end gap-2 mt-2">
+              <button className="px-3 py-1 rounded" style={{ background: 'var(--accent2)', color: 'var(--accent)' }} onClick={handleMealplanEditClose}>Schließen</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
   const [localConfig, setLocalConfig] = useState(config || {
     family: [],
     todos: [],
-    mealplan: Array(7).fill(0).map(() => Array(3).fill("")),
+    mealplan: Array(7).fill(0).map(() => Array(3).fill({ name: "", link: "" })),
     termine: Array(7).fill(0).map(() => []),
     standardItems: [
       { name: "Küche putzen", icon: "🧽" },
@@ -377,11 +427,21 @@ export default function ConfigPage({ onSave, config, isAuthenticated, onLogin, o
                   <td className="border p-1 font-semibold">{day}</td>
                   {meals.map((_, mealIdx) => (
                     <td className="border p-1" key={mealIdx}>
-                      <input
-                        className="border p-1 w-full"
-                        value={localConfig.mealplan && localConfig.mealplan[dayIdx] ? localConfig.mealplan[dayIdx][mealIdx] : ""}
-                        onChange={e => handleMealplanChange(dayIdx, mealIdx, e.target.value)}
-                      />
+                      <button
+                        className="w-full text-left border p-1 bg-white hover:bg-gray-100 rounded"
+                        type="button"
+                        onClick={() => setMealplanEdit({ dayIdx, mealIdx })}
+                      >
+                        {(() => {
+                          let meal = null;
+                          if (localConfig.mealplan && localConfig.mealplan[dayIdx]) {
+                            meal = localConfig.mealplan[dayIdx][mealIdx];
+                          }
+                          if (!meal) return "";
+                          if (typeof meal === "string") return meal;
+                          return meal.name || "";
+                        })()}
+                      </button>
                     </td>
                   ))}
                 </tr>
@@ -429,6 +489,7 @@ export default function ConfigPage({ onSave, config, isAuthenticated, onLogin, o
       >
         Speichern
       </button>
+    {renderMealplanEditPopup()}
     </div>
   );
 }
