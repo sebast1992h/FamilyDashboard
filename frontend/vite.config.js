@@ -9,7 +9,8 @@ export default defineConfig({
     port: 3000,
     proxy: {
       "/api": "http://backend:4000" // API-Proxy zu deinem Express-Server
-    }
+    },
+    allowedHosts: true
   },
   build: {
     outDir: "dist"
