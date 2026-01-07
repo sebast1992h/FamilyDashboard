@@ -247,7 +247,7 @@ export default function App() {
                                   <span className="inline-block">📅</span>
                                   <span>{ev.summary}</span>
                                   {ev.start && (
-                                    <span className="ml-1 text-gray-500">{new Date(ev.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                    <span className="ml-1 text-gray-500">{new Date(ev.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</span>
                                   )}
                                   {ev.location && (
                                     <span className="ml-1 text-gray-400">({ev.location})</span>
@@ -272,7 +272,7 @@ export default function App() {
                                 <span className="inline-block">📅</span>
                                 <span>{ev.summary}</span>
                                 {ev.start && (
-                                  <span className="ml-1 text-gray-500">{new Date(ev.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                  <span className="ml-1 text-gray-500">{new Date(ev.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</span>
                                 )}
                                 {ev.location && (
                                   <span className="ml-1 text-gray-400">({ev.location})</span>
@@ -335,7 +335,7 @@ export default function App() {
                       onChange={() => handleTodoToggle(i)}
                       className="accent-green-600 w-5 h-5"
                     />
-                    <span style={{ textDecoration: t.done ? 'line-through' : 'none', color: t.done ? '#888' : undefined }}>{t.text}</span>
+                    <span style={{ textDecoration: t.done ? 'line-through' : 'none', color: t.done ? '#888' : undefined }}>{typeof t === 'object' && t !== null ? t.text : t}</span>
                   </li>
                 ))}
               </ul>
