@@ -28,6 +28,16 @@ export default function App() {
   const [version, setVersion] = useState("");
   const [notes, setNotes] = useState("");
   const notesSaveTimeout = useRef(null);
+  const notesRef = useRef(null);
+
+  // Auto-resize für Notizen-Textarea
+  useEffect(() => {
+    if (notesRef.current) {
+      notesRef.current.style.height = 'auto';
+      notesRef.current.style.height = Math.min(notesRef.current.scrollHeight, window.innerHeight * 0.6) + 'px';
+    }
+  }, [notes]);
+
     // Version beim Start laden
     useEffect(() => {
       fetchVersion().then(setVersion);
@@ -203,7 +213,7 @@ export default function App() {
             <span className="font-bold text-xl">Family Dashboard</span>
             {todaysBirthdays.length > 0 && (
               <div className="ml-4 px-8 py-3 rounded text-lg font-medium" style={{ background: 'var(--accent)', color: 'var(--bg-main)' }}>
-                🎂 Heute hat Geburtstag: {todaysBirthdays.map(b => b.name).join(', ')} 🎉
+                🎉 Heute hat Geburtstag: {todaysBirthdays.map(b => b.name).join(', ')} 🎉
               </div>
             )}
           </div>
@@ -357,11 +367,12 @@ export default function App() {
             <div className="md:col-span-1">
               <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--accent)' }}>📝 Notizen</h2>
               <textarea
-                className="w-full h-48 card p-2 text-base border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 resize-vertical"
+                ref={notesRef}
+                className="w-full card p-2 text-base border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none overflow-hidden"
                 placeholder="Notizen hier eingeben..."
                 value={notes}
                 onChange={e => setNotes(e.target.value)}
-                style={{ minHeight: 120, background: 'var(--bg-main)', color: 'var(--text-main)' }}
+                style={{ minHeight: 120, maxHeight: '60vh', background: 'var(--bg-main)', color: 'var(--text-main)' }}
               />
               <div className="text-xs text-gray-400 mt-1">Wird automatisch gespeichert</div>
             </div>
