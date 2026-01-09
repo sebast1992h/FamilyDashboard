@@ -58,47 +58,95 @@ export default function ConfigPage({ onSave, config, isAuthenticated, onLogin, o
   }
 
   // --- Geburtstage Funktionen ---
-  function openBirthdayPopup(idx = null) {
-    setBirthdayEditIdx(idx);
-    if (idx !== null && localConfig.birthdays && localConfig.birthdays[idx]) {
-      setBirthdayName(localConfig.birthdays[idx].name);
-      setBirthdayDate(localConfig.birthdays[idx].date);
-    } else {
-      setBirthdayName("");
-      setBirthdayDate("");
-    }
+  function openBirthdayPopup() {
+    setBirthdayEditIdx(null);
+    setBirthdayName("");
+    setBirthdayDate("");
     setShowBirthdayPopup(true);
   }
 
+  function startEditBirthday(idx) {
+    setBirthdayEditIdx(idx);
+    setBirthdayName(localConfig.birthdays[idx].name);
+    setBirthdayDate(localConfig.birthdays[idx].date);
+  }
+
+  function cancelEditBirthday() {
+    setBirthdayEditIdx(null);
+    setBirthdayName("");
+    setBirthdayDate("");
+  }
+
   function saveBirthday() {
+    if (!birthdayName.trim() || !birthdayDate) return;
     const arr = [...(localConfig.birthdays || [])];
     if (birthdayEditIdx !== null) {
       arr[birthdayEditIdx] = { name: birthdayName, date: birthdayDate };
+      setBirthdayEditIdx(null);
     } else {
       arr.push({ name: birthdayName, date: birthdayDate });
     }
     setLocalConfig({ ...localConfig, birthdays: arr });
-    setShowBirthdayPopup(false);
+    setBirthdayName("");
+    setBirthdayDate("");
   }
 
   function removeBirthday(idx) {
     const arr = [...(localConfig.birthdays || [])];
     arr.splice(idx, 1);
     setLocalConfig({ ...localConfig, birthdays: arr });
+    if (birthdayEditIdx === idx) {
+      setBirthdayEditIdx(null);
+      setBirthdayName("");
+      setBirthdayDate("");
+    }
   }
 
   const renderBirthdayPopup = () => showBirthdayPopup && (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30">
-      <div className="p-6 rounded shadow-lg min-w-[300px]" style={{ background: 'var(--bg-main)', color: 'var(--text-main)' }}>
-        <h3 className="font-bold mb-2" style={{ color: 'var(--accent)' }}>Geburtstag {birthdayEditIdx !== null ? 'bearbeiten' : 'hinzufügen'}</h3>
-        <label className="block mb-1">Name:</label>
-        <input className="border p-1 w-full mb-2" value={birthdayName} onChange={e => setBirthdayName(e.target.value)} placeholder="Name" style={{ background: 'var(--bg-main)', color: 'var(--text-main)' }} />
-        <label className="block mb-1">Geburtstag:</label>
-        <input className="border p-1 w-full mb-2" type="date" value={birthdayDate} onChange={e => setBirthdayDate(e.target.value)} style={{ background: 'var(--bg-main)', color: 'var(--text-main)' }} />
-        <div className="flex justify-end gap-2 mt-2">
-          {birthdayEditIdx !== null && <button className="px-3 py-1 rounded bg-red-600 text-white" onClick={() => { removeBirthday(birthdayEditIdx); setShowBirthdayPopup(false); }}>Löschen</button>}
-          <button className="px-3 py-1 rounded" style={{ background: 'var(--accent2)', color: 'var(--accent)' }} onClick={() => setShowBirthdayPopup(false)}>Abbrechen</button>
-          <button className="px-3 py-1 rounded bg-green-600 text-white" onClick={saveBirthday}>Speichern</button>
+      <div className="p-6 rounded shadow-lg min-w-[400px] max-w-[500px] max-h-[80vh] overflow-y-auto" style={{ background: 'var(--bg-main)', color: 'var(--text-main)' }}>
+        <h3 className="font-bold mb-4 text-lg" style={{ color: 'var(--accent)' }}>Geburtstage verwalten</h3>
+        
+        {/* Liste aller Geburtstage */}
+        {localConfig.birthdays && localConfig.birthdays.length > 0 ? (
+          <div className="mb-4">
+            <div className="font-semibold mb-2">Alle Geburtstage:</div>
+            <ul className="space-y-2">
+              {localConfig.birthdays.map((b, i) => (
+                <li key={i} className="flex items-center justify-between p-2 rounded" style={{ background: 'var(--accent2)' }}>
+                  <span>🎂 {b.name} – {new Date(b.date).toLocaleDateString('de-DE')}</span>
+                  <div className="flex gap-2">
+                    <button className="px-2 py-1 text-sm rounded" style={{ background: 'var(--accent)', color: 'var(--bg-main)' }} onClick={() => startEditBirthday(i)}>Bearbeiten</button>
+                    <button className="px-2 py-1 text-sm rounded bg-red-600 text-white" onClick={() => removeBirthday(i)}>Löschen</button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div className="mb-4 text-gray-500">Noch keine Geburtstage eingetragen.</div>
+        )}
+
+        {/* Formular zum Hinzufügen/Bearbeiten */}
+        <div className="border-t pt-4 mt-4" style={{ borderColor: 'var(--accent2)' }}>
+          <div className="font-semibold mb-2">{birthdayEditIdx !== null ? 'Geburtstag bearbeiten:' : 'Neuen Geburtstag hinzufügen:'}</div>
+          <label className="block mb-1 text-sm">Name:</label>
+          <input className="border p-2 w-full mb-2 rounded" value={birthdayName} onChange={e => setBirthdayName(e.target.value)} placeholder="Name" style={{ background: 'var(--bg-main)', color: 'var(--text-main)' }} />
+          <label className="block mb-1 text-sm">Datum:</label>
+          <input className="border p-2 w-full mb-3 rounded" type="date" value={birthdayDate} onChange={e => setBirthdayDate(e.target.value)} style={{ background: 'var(--bg-main)', color: 'var(--text-main)' }} />
+          <div className="flex gap-2">
+            {birthdayEditIdx !== null && (
+              <button className="px-3 py-2 rounded" style={{ background: 'var(--accent2)', color: 'var(--text-main)' }} onClick={cancelEditBirthday}>Abbrechen</button>
+            )}
+            <button className="px-3 py-2 rounded bg-green-600 text-white" onClick={saveBirthday}>
+              {birthdayEditIdx !== null ? 'Änderung speichern' : '+ Hinzufügen'}
+            </button>
+          </div>
+        </div>
+
+        {/* Schließen-Button */}
+        <div className="flex justify-end mt-4 pt-4 border-t" style={{ borderColor: 'var(--accent2)' }}>
+          <button className="px-4 py-2 rounded" style={{ background: 'var(--accent)', color: 'var(--bg-main)' }} onClick={() => setShowBirthdayPopup(false)}>Schließen</button>
         </div>
       </div>
     </div>
@@ -261,20 +309,9 @@ export default function ConfigPage({ onSave, config, isAuthenticated, onLogin, o
 
       {/* Geburtstage */}
       <div className="mb-4">
-        <button className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-600" onClick={() => openBirthdayPopup()}>Geburtstage</button>
-        {localConfig.birthdays && localConfig.birthdays.length > 0 && (
-          <div className="mt-2">
-            <div className="font-semibold mb-1">Alle Geburtstage:</div>
-            <ul>
-              {localConfig.birthdays.map((b, i) => (
-                <li key={i} className="flex gap-2 items-center mb-1">
-                  <span>{b.name} ({b.date})</span>
-                  <button className="text-accent px-2" onClick={() => openBirthdayPopup(i)}>Bearbeiten</button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <button className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-600" onClick={() => openBirthdayPopup()}>
+          🎂 Geburtstage verwalten {localConfig.birthdays && localConfig.birthdays.length > 0 && `(${localConfig.birthdays.length})`}
+        </button>
       </div>
 
       {/* Familienmitglieder */}
