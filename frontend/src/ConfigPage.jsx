@@ -68,6 +68,7 @@ export default function ConfigPage({ onSave, config, isAuthenticated, onLogin, o
     function handleMealplanEditClose() {
       setMealplanEdit(null);
     }
+    }
     function renderMealplanEditPopup() {
       if (!mealplanEdit) return null;
       const { dayIdx, mealIdx } = mealplanEdit;
