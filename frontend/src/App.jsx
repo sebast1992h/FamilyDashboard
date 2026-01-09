@@ -202,7 +202,7 @@ export default function App() {
           <div className="flex items-center gap-4">
             <span className="font-bold text-xl">Family Dashboard</span>
             {todaysBirthdays.length > 0 && (
-              <div className="ml-4 px-4 py-2 rounded text-sm" style={{ background: 'var(--accent)', color: 'var(--bg-main)' }}>
+              <div className="ml-4 px-6 py-3 rounded text-lg font-medium" style={{ background: 'var(--accent)', color: 'var(--bg-main)' }}>
                 🎂 Heute hat Geburtstag: {todaysBirthdays.map(b => b.name).join(', ')}
               </div>
             )}
@@ -261,16 +261,13 @@ export default function App() {
                           </div>
                           {/* iCal-Termine für dieses Familienmitglied */}
                           {icalEvents[dIdx] && icalEvents[dIdx][member] && icalEvents[dIdx][member].length > 0 && (
-                            <div className="mt-1 text-xs text-blue-700">
+                            <div className="mt-1">
                               {icalEvents[dIdx][member].map((ev, i) => (
                                 <div key={i} className="flex items-center gap-1">
                                   <span className="inline-block">📅</span>
                                   <span>{ev.summary}</span>
                                   {ev.start && (
                                     <span className="ml-1 text-gray-500">{new Date(ev.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</span>
-                                  )}
-                                  {ev.location && (
-                                    <span className="ml-1 text-gray-400">({ev.location})</span>
                                   )}
                                 </div>
                               ))}
@@ -293,9 +290,6 @@ export default function App() {
                                 <span>{ev.summary}</span>
                                 {ev.start && (
                                   <span className="ml-1 text-gray-500">{new Date(ev.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</span>
-                                )}
-                                {ev.location && (
-                                  <span className="ml-1 text-gray-400">({ev.location})</span>
                                 )}
                               </div>
                             ))}
