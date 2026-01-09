@@ -135,7 +135,7 @@ export default function App() {
     try {
       await saveDashboardConfig(newConfig);
       setConfig(newConfig);
-      setRoute("config");
+      setRoute("dashboard");
     } catch (e) {
       setError("Fehler beim Speichern der Dashboard-Daten");
     } finally {
@@ -167,7 +167,7 @@ export default function App() {
     return <div className="p-8 text-center text-red-500">{error}</div>;
   }
   if (route === "config") {
-    return <ConfigPage onSave={handleSave} config={config} isAuthenticated={isAuthenticated} onLogin={handleLogin} onBack={() => setRoute("dashboard")} />;
+    return <ConfigPage key={isAuthenticated ? "auth" : "noauth"} onSave={handleSave} config={config} isAuthenticated={isAuthenticated} onLogin={handleLogin} onBack={() => setRoute("dashboard")} />;
   }
 
   async function handleTodoToggle(idx) {
