@@ -5,6 +5,56 @@ const days = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samsta
 const meals = ["Morgens", "Mittags", "Abends"];
 
 export default function ConfigPage({ onSave, config, isAuthenticated, onLogin, onBack }) {
+      // Geburtstage State und Popup
+      const [showBirthdayPopup, setShowBirthdayPopup] = useState(false);
+      const [birthdayEditIdx, setBirthdayEditIdx] = useState(null);
+      const [birthdayName, setBirthdayName] = useState("");
+      const [birthdayDate, setBirthdayDate] = useState("");
+      // Geburtstage initialisieren, falls nicht vorhanden
+      if (!localConfig.birthdays) localConfig.birthdays = [];
+
+      function openBirthdayPopup(idx = null) {
+        setBirthdayEditIdx(idx);
+        if (idx !== null) {
+          setBirthdayName(localConfig.birthdays[idx].name);
+          setBirthdayDate(localConfig.birthdays[idx].date);
+        } else {
+          setBirthdayName("");
+          setBirthdayDate("");
+        }
+        setShowBirthdayPopup(true);
+      }
+      function saveBirthday() {
+        const arr = [...localConfig.birthdays];
+        if (birthdayEditIdx !== null) {
+          arr[birthdayEditIdx] = { name: birthdayName, date: birthdayDate };
+        } else {
+          arr.push({ name: birthdayName, date: birthdayDate });
+        }
+        setLocalConfig({ ...localConfig, birthdays: arr });
+        setShowBirthdayPopup(false);
+      }
+      function removeBirthday(idx) {
+        const arr = [...localConfig.birthdays];
+        arr.splice(idx, 1);
+        setLocalConfig({ ...localConfig, birthdays: arr });
+      }
+      const renderBirthdayPopup = () => showBirthdayPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30">
+          <div className="p-6 rounded shadow-lg min-w-[300px]" style={{ background: 'var(--bg-main)', color: 'var(--text-main)' }}>
+            <h3 className="font-bold mb-2" style={{ color: 'var(--accent)' }}>Geburtstag {birthdayEditIdx !== null ? 'bearbeiten' : 'hinzufügen'}</h3>
+            <label className="block mb-1">Name:</label>
+            <input className="border p-1 w-full mb-2" value={birthdayName} onChange={e => setBirthdayName(e.target.value)} placeholder="Name" style={{ background: 'var(--bg-main)', color: 'var(--text-main)' }} />
+            <label className="block mb-1">Geburtstag:</label>
+            <input className="border p-1 w-full mb-2" type="date" value={birthdayDate} onChange={e => setBirthdayDate(e.target.value)} style={{ background: 'var(--bg-main)', color: 'var(--text-main)' }} />
+            <div className="flex justify-end gap-2 mt-2">
+              {birthdayEditIdx !== null && <button className="px-3 py-1 rounded bg-red-600 text-white" onClick={() => { removeBirthday(birthdayEditIdx); setShowBirthdayPopup(false); }}>Löschen</button>}
+              <button className="px-3 py-1 rounded" style={{ background: 'var(--accent2)', color: 'var(--accent)' }} onClick={() => setShowBirthdayPopup(false)}>Abbrechen</button>
+              <button className="px-3 py-1 rounded bg-green-600 text-white" onClick={saveBirthday}>Speichern</button>
+            </div>
+          </div>
+        </div>
+      );
     // --- Essensplan-Popup-Logik ---
     const [mealplanEdit, setMealplanEdit] = useState(null);
     function handleMealplanObjChange(dayIdx, mealIdx, field, value) {
@@ -24,6 +74,24 @@ export default function ConfigPage({ onSave, config, isAuthenticated, onLogin, o
       const meal = localConfig.mealplan && localConfig.mealplan[dayIdx] ? localConfig.mealplan[dayIdx][mealIdx] : { name: "", link: "" };
       const val = typeof meal === "string" ? { name: meal, link: "" } : meal;
       return (
+              {/* Geburtstage Button */}
+              <div className="mb-4">
+                <button className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-600" onClick={() => openBirthdayPopup()}>Geburtstage</button>
+                {localConfig.birthdays.length > 0 && (
+                  <div className="mt-2">
+                    <div className="font-semibold mb-1">Alle Geburtstage:</div>
+                    <ul>
+                      {localConfig.birthdays.map((b, i) => (
+                        <li key={i} className="flex gap-2 items-center mb-1">
+                          <span>{b.name} ({b.date})</span>
+                          <button className="text-accent px-2" onClick={() => openBirthdayPopup(i)}>Bearbeiten</button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+              {renderBirthdayPopup()}
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30">
           <div
             className="p-6 rounded shadow-lg min-w-[300px]"

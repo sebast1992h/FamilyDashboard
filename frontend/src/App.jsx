@@ -18,6 +18,18 @@ const meals = ["Morgens", "Mittags", "Abends"];
 
 
 export default function App() {
+    // Geburtstags-Newsbanner
+    let todaysBirthdays = [];
+    if (config && config.birthdays && Array.isArray(config.birthdays)) {
+      const today = new Date();
+      const todayStr = (today.getMonth() + 1).toString().padStart(2, '0') + '-' + today.getDate().toString().padStart(2, '0');
+      todaysBirthdays = config.birthdays.filter(b => {
+        if (!b.date) return false;
+        // b.date im Format YYYY-MM-DD
+        const [, month, day] = b.date.split('-');
+        return (month + '-' + day) === todayStr;
+      });
+    }
   const [todos, setTodos] = useState([]);
   const [config, setConfig] = useState(null);
   const [route, setRoute] = useState("dashboard");
@@ -185,8 +197,15 @@ export default function App() {
   return (
     <>
       <div className="min-h-screen" style={{ background: 'var(--bg-main)', color: 'var(--text-main)' }}>
-        <nav className="flex justify-between items-center p-4 shadow" style={{ background: 'var(--accent2)', color: 'var(--accent)' }}>
-          <span className="font-bold text-xl">Family Dashboard</span>
+        <nav className="flex flex-col gap-2 md:flex-row md:justify-between md:items-center p-4 shadow" style={{ background: 'var(--accent2)', color: 'var(--accent)' }}>
+          <div className="flex items-center gap-4">
+            <span className="font-bold text-xl">Family Dashboard</span>
+            {todaysBirthdays.length > 0 && (
+              <div className="ml-4 px-4 py-2 rounded bg-yellow-400 text-black font-semibold animate-pulse">
+                🎉 Heute hat Geburtstag: {todaysBirthdays.map(b => b.name).join(', ')} 🎉
+              </div>
+            )}
+          </div>
           <button className="px-4 py-2" onClick={() => setRoute("config")}>Konfiguration</button>
         </nav>
         <div className="p-4">

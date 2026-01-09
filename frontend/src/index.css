@@ -17,6 +17,10 @@
 body {
   background: var(--bg-main);
   color: var(--text-main);
+  font-size: 1.5rem; /* Für große Monitore, ca. 24px */
+  line-height: 1.6;
+  max-width: 1920px;
+  margin: 0 auto;
 }
 
 .card {
@@ -31,6 +35,7 @@ body {
 th, td {
   border-color: var(--border) !important;
   color: var(--text-main) !important;
+  font-size: 1.2em;
 }
 
 th {
