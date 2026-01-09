@@ -219,7 +219,23 @@ export default function App() {
             <span className="font-bold text-xl">Family Dashboard</span>
             {todaysBirthdays.length > 0 && (
               <div className="ml-4 px-8 py-3 rounded text-lg font-medium" style={{ background: 'var(--accent)', color: 'var(--bg-main)' }}>
-                🎉 Heute hat Geburtstag: {todaysBirthdays.map(b => b.name).join(', ')} 🎉
+                🎉 Heute hat Geburtstag: {todaysBirthdays.map(b => {
+                  // Alter berechnen
+                  if (!b.date) return b.name;
+                  const birthYear = parseInt(b.date.split('-')[0], 10);
+                  const today = new Date();
+                  let age = today.getFullYear() - birthYear;
+                  // Falls Geburtstag dieses Jahr noch nicht war, ein Jahr abziehen
+                  const month = parseInt(b.date.split('-')[1], 10);
+                  const day = parseInt(b.date.split('-')[2], 10);
+                  if (
+                    today.getMonth() + 1 < month ||
+                    (today.getMonth() + 1 === month && today.getDate() < day)
+                  ) {
+                    age--;
+                  }
+                  return `${b.name} (${age})`;
+                }).join(', ')} 🎉
               </div>
             )}
           </div>
