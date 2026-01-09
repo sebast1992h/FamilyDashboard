@@ -18,18 +18,6 @@ const meals = ["Morgens", "Mittags", "Abends"];
 
 
 export default function App() {
-    // Geburtstags-Newsbanner
-    let todaysBirthdays = [];
-    if (config && config.birthdays && Array.isArray(config.birthdays)) {
-      const today = new Date();
-      const todayStr = (today.getMonth() + 1).toString().padStart(2, '0') + '-' + today.getDate().toString().padStart(2, '0');
-      todaysBirthdays = config.birthdays.filter(b => {
-        if (!b.date) return false;
-        // b.date im Format YYYY-MM-DD
-        const [, month, day] = b.date.split('-');
-        return (month + '-' + day) === todayStr;
-      });
-    }
   const [todos, setTodos] = useState([]);
   const [config, setConfig] = useState(null);
   const [route, setRoute] = useState("dashboard");
@@ -192,6 +180,19 @@ export default function App() {
     } catch (e) {
       setError("Fehler beim Speichern der To-dos");
     }
+  }
+
+  // Geburtstags-Newsbanner
+  let todaysBirthdays = [];
+  if (config && config.birthdays && Array.isArray(config.birthdays)) {
+    const today = new Date();
+    const todayStr = (today.getMonth() + 1).toString().padStart(2, '0') + '-' + today.getDate().toString().padStart(2, '0');
+    todaysBirthdays = config.birthdays.filter(b => {
+      if (!b.date) return false;
+      // b.date im Format YYYY-MM-DD
+      const [, month, day] = b.date.split('-');
+      return (month + '-' + day) === todayStr;
+    });
   }
 
   return (
