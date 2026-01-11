@@ -165,3 +165,37 @@ app.get("/api/calendar", async (req, res) => {
 });
 
 app.listen(4000, () => console.log("Backend läuft auf Port 4000"));
+
+// Debug-Endpunkt: Zeige rohe iCal-Events
+app.get("/api/calendar-debug", async (req, res) => {
+  try {
+    const config = loadConfig();
+    const icalUrl = config.calendarIcalUrl;
+    if (!icalUrl) {
+      return res.status(400).json({ error: "Kein iCal-Link hinterlegt." });
+    }
+    const response = await fetch(icalUrl);
+    const icalData = await response.text();
+    const events = ical.parseICS(icalData);
+    
+    const debugEvents = [];
+    for (const k in events) {
+      const ev = events[k];
+      if (ev.type === 'VEVENT' && ev.start) {
+        debugEvents.push({
+          summary: ev.summary,
+          startRaw: ev.start,
+          startType: typeof ev.start,
+          startTz: ev.start?.tz || 'keine tz property',
+          startToString: ev.start?.toString?.() || String(ev.start),
+          startISO: ev.start instanceof Date ? ev.start.toISOString() : 'kein Date',
+          startGetHours: ev.start instanceof Date ? ev.start.getHours() : 'kein Date',
+          startLocaleBerlin: ev.start instanceof Date ? ev.start.toLocaleTimeString('de-DE', { timeZone: 'Europe/Berlin' }) : 'kein Date',
+        });
+      }
+    }
+    res.json(debugEvents);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
