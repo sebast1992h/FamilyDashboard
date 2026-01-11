@@ -164,8 +164,6 @@ app.get("/api/calendar", async (req, res) => {
   }
 });
 
-app.listen(4000, () => console.log("Backend läuft auf Port 4000"));
-
 // Debug-Endpunkt: Zeige rohe iCal-Events
 app.get("/api/calendar-debug", async (req, res) => {
   try {
@@ -199,3 +197,5 @@ app.get("/api/calendar-debug", async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
+
+app.listen(4000, () => console.log("Backend läuft auf Port 4000"));
