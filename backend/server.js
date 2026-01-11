@@ -94,18 +94,19 @@ app.get("/api/calendar", async (req, res) => {
     // Daher müssen wir bei solchen Events die Zeit direkt aus dem Date-Objekt nehmen
     function formatTimeCorrect(d) {
       if (!d) return null;
-      const date = d instanceof Date ? d : new Date(d);
       
       // Wenn das ical-Package eine Zeitzone gesetzt hat (z.B. Europe/Berlin)
       // dann ist die Zeit im Date-Objekt bereits die lokale Zeit (als UTC gespeichert)
       // Wir müssen sie daher direkt auslesen ohne Konvertierung
       if (d && typeof d === 'object' && d.tz && d.tz !== 'UTC') {
+        const date = d instanceof Date ? d : new Date(d);
         const h = date.getUTCHours().toString().padStart(2, '0');
         const m = date.getUTCMinutes().toString().padStart(2, '0');
         return `${h}:${m}`;
       }
       
       // Bei UTC-Events (kein tz oder tz=UTC) nach Europe/Berlin konvertieren
+      const date = d instanceof Date ? d : new Date(d);
       return date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/Berlin' });
     }
     
