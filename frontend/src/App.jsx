@@ -30,6 +30,26 @@ export default function App() {
   const notesSaveTimeout = useRef(null);
   const notesRef = useRef(null);
 
+  // Einheitliche Zeitdarstellung: immer HH:MM in Europe/Berlin
+  function renderTime(val) {
+    if (!val) return "";
+    if (typeof val === 'string') {
+      // Bereits formatiert? HH:MM oder HH:MM:SS
+      const hhmm = /^(\d{2}):(\d{2})(?::\d{2})?$/.test(val);
+      if (hhmm) return val.slice(0, 5);
+      // ISO-Datum oder sonstige Zeitangabe -> in Berlin-Zeit formatieren
+      const d = new Date(val);
+      if (!isNaN(d)) {
+        return d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/Berlin' });
+      }
+      return val;
+    }
+    if (val instanceof Date) {
+      return val.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/Berlin' });
+    }
+    return String(val);
+  }
+
   // Auto-resize für Notizen-Textarea
   useEffect(() => {
     if (notesRef.current) {
@@ -312,7 +332,7 @@ export default function App() {
                                   <span className="inline-block">📅</span>
                                   <span>{ev.summary}</span>
                                   {ev.start && (
-                                    <span className="ml-1 text-gray-500">{ev.start}</span>
+                                    <span className="ml-1 text-gray-500">{renderTime(ev.start)}</span>
                                   )}
                                 </div>
                               ))}
@@ -334,7 +354,7 @@ export default function App() {
                                 <span className="inline-block">📅</span>
                                 <span>{ev.summary}</span>
                                 {ev.start && (
-                                  <span className="ml-1 text-gray-500">{ev.start}</span>
+                                  <span className="ml-1 text-gray-500">{renderTime(ev.start)}</span>
                                 )}
                               </div>
                             ))}
