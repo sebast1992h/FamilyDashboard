@@ -312,7 +312,17 @@ export default function App() {
                                   <span className="inline-block">📅</span>
                                   <span>{ev.summary}</span>
                                   {ev.start && (
-                                    <span className="ml-1 text-gray-500">{new Date(ev.start).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/Berlin' })}</span>
+                                    (() => {
+                                      const startStr = typeof ev.start === 'string' ? ev.start : '';
+                                      const dateObj = new Date(ev.start);
+                                      // UTC-Format: ...Z am Ende
+                                      if (startStr.endsWith('Z')) {
+                                        return <span className="ml-1 text-gray-500">{dateObj.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/Berlin' })}</span>;
+                                      } else {
+                                        // Lokale Zeit (z.B. mit TZID=Europe/Berlin)
+                                        return <span className="ml-1 text-gray-500">{dateObj.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false })}</span>;
+                                      }
+                                    })()
                                   )}
                                 </div>
                               ))}
