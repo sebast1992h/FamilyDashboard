@@ -96,12 +96,10 @@ app.get("/api/calendar", async (req, res) => {
         // Tag im Bereich der aktuellen Woche (Montag=0)
         const diff = Math.round((start - monday) / (1000*60*60*24));
         if (diff >= 0 && diff < 7) {
-          // Hilfsfunktion: Uhrzeit als HH:MM extrahieren (lokale Zeit des Date-Objekts)
+          // Hilfsfunktion: Uhrzeit als HH:MM extrahieren (immer Europe/Berlin)
           function formatTime(d) {
             if (!d) return null;
-            const h = String(d.getHours()).padStart(2, '0');
-            const m = String(d.getMinutes()).padStart(2, '0');
-            return h + ':' + m;
+            return d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/Berlin' });
           }
           // Versuche, den Termin einem Familienmitglied zuzuordnen
           let matched = false;
