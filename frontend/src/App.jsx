@@ -314,12 +314,18 @@ export default function App() {
                                   {ev.start && (
                                     (() => {
                                       const startStr = typeof ev.start === 'string' ? ev.start : '';
-                                      const dateObj = new Date(ev.start);
-                                      // UTC-Format: ...Z am Ende
                                       if (startStr.endsWith('Z')) {
+                                        // UTC-Format: wie gehabt
+                                        const dateObj = new Date(ev.start);
                                         return <span className="ml-1 text-gray-500">{dateObj.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/Berlin' })}</span>;
+                                      } else if (/^\d{8}T\d{6}$/.test(startStr)) {
+                                        // Format: YYYYMMDDTHHMMSS (ohne Z, mit TZID)
+                                        const hour = startStr.substring(9, 11);
+                                        const min = startStr.substring(11, 13);
+                                        return <span className="ml-1 text-gray-500">{hour}:{min}</span>;
                                       } else {
-                                        // Lokale Zeit (z.B. mit TZID=Europe/Berlin)
+                                        // Fallback: bisherige Logik
+                                        const dateObj = new Date(ev.start);
                                         return <span className="ml-1 text-gray-500">{dateObj.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false })}</span>;
                                       }
                                     })()
