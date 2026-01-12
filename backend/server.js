@@ -5,10 +5,6 @@ import fs from "fs";
 import path from "path";
 import ical from "ical";
 import fetch from "node-fetch";
-// import sqlite3 from "sqlite3";
-// import { open } from "sqlite";
-// import { google } from "googleapis";
-
 
 const app = express();
 app.use(cors());
@@ -16,34 +12,9 @@ app.use(express.json());
 
 const DATA_FILE = path.join(process.cwd(), "dashboard-data.json");
 
-// ...existing code...
-// API für Version
-app.get("/api/version", (req, res) => {
-  try {
-    const version = fs.readFileSync(path.join(process.cwd(), "version.txt"), "utf-8").trim();
-    res.json({ version });
-  } catch (e) {
-    res.json({ version: "unbekannt" });
-  }
-});
-
 function loadConfig() {
   if (!fs.existsSync(DATA_FILE)) {
-    return {
-      family: [],
-      todos: [],
-      mealplan: Array(7).fill(0).map(() => Array(3).fill("")),
-      termine: Array(7).fill(0).map(() => []),
-      standardItems: [
-        { name: "Küche putzen", icon: "🧽" },
-        { name: "Bad putzen", icon: "🛁" },
-        { name: "Flur putzen", icon: "🧹" },
-        { name: "Turnen", icon: "🤸" },
-        { name: "Büro", icon: "💻" }
-      ],
-      standardItemPlan: Array(7).fill(0).map(() => []),
-      standardItemPersonPlan: Array(7).fill(0).map(() => []),
-    };
+    return { family: [], calendarIcalUrl: null };
   }
   return JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
 }
@@ -52,141 +23,132 @@ function saveConfig(cfg) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(cfg, null, 2), "utf-8");
 }
 
-app.get("/api/config", (req, res) => {
-  res.json(loadConfig());
-});
+app.get("/api/config", (req, res) => res.json(loadConfig()));
+app.post("/api/config", (req, res) => { saveConfig(req.body); res.json({ success: true }); });
 
-app.post("/api/config", (req, res) => {
-  const cfg = req.body;
-  saveConfig(cfg);
-  res.json({ success: true });
-});
-
-// iCal-Feed abrufen und als JSON zurückgeben
+// Return weekly buckets with events that include only summary and location
 app.get("/api/calendar", async (req, res) => {
   try {
-    const config = loadConfig();
-    const icalUrl = config.calendarIcalUrl;
-    const family = config.family || [];
-    if (!icalUrl) {
-      return res.status(400).json({ error: "Kein iCal-Link hinterlegt." });
-    }
+    const cfg = loadConfig();
+    const icalUrl = cfg.calendarIcalUrl;
+    const family = cfg.family || [];
+    if (!icalUrl) return res.status(400).json({ error: "Kein iCal-Link hinterlegt." });
+
     const response = await fetch(icalUrl);
-    if (!response.ok) {
-      return res.status(500).json({ error: "Fehler beim Abrufen des iCal-Feeds." });
-    }
+    if (!response.ok) return res.status(500).json({ error: "Fehler beim Abrufen des iCal-Feeds." });
     const icalData = await response.text();
     const events = ical.parseICS(icalData);
-    // Pro Tag: { [memberName]: [events], Kalender: [events] }
-    const days = Array(7).fill(0).map(() => ({}));
-    // Setze now auf Mitternacht (Europe/Berlin)
+
+    // Build a map of UID -> original DTSTART token from the raw ICS
+    const dtstartMap = {};
+    try {
+      const veventRe = /BEGIN:VEVENT([\s\S]*?)END:VEVENT/g;
+      let m;
+      while ((m = veventRe.exec(icalData)) !== null) {
+        const block = m[1];
+        const uidMatch = /UID:(.+)/.exec(block);
+        const dtMatch = /DTSTART(;[^:]*)?:(.+)/.exec(block);
+        if (uidMatch && dtMatch) {
+          dtstartMap[uidMatch[1].trim()] = { params: dtMatch[1] ? dtMatch[1].trim() : null, value: dtMatch[2].trim() };
+        }
+      }
+    } catch (e) {
+      // ignore parsing errors of the raw ICS
+    }
+
+    const days = Array.from({ length: 7 }, () => ({}));
+
     const now = new Date();
     const nowBerlin = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Berlin' }));
     nowBerlin.setHours(0,0,0,0);
-    // Finde Montag dieser Woche
     const dayOfWeek = nowBerlin.getDay();
     const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
     const monday = new Date(nowBerlin.getFullYear(), nowBerlin.getMonth(), nowBerlin.getDate() + mondayOffset);
     monday.setHours(0,0,0,0);
-    
-    // Hilfsfunktion: formatiert Zeit korrekt basierend auf Zeitzone
-    // Das ical-Package speichert bei TZID=Europe/Berlin die lokale Zeit als UTC-Wert
-    // Daher müssen wir bei solchen Events die Zeit direkt aus dem Date-Objekt nehmen
-    function formatTimeCorrect(d) {
-      if (!d) return null;
-      
-      // Wenn das ical-Package eine Zeitzone gesetzt hat (z.B. Europe/Berlin)
-      // dann ist die Zeit im Date-Objekt bereits die lokale Zeit (als UTC gespeichert)
-      // Wir müssen sie daher direkt auslesen ohne Konvertierung
-      if (d && typeof d === 'object' && d.tz && d.tz !== 'UTC') {
-        const date = d instanceof Date ? d : new Date(d);
-        const h = date.getUTCHours().toString().padStart(2, '0');
-        const m = date.getUTCMinutes().toString().padStart(2, '0');
-        return `${h}:${m}`;
+
+    function formatEventStart(ev) {
+      try {
+        let d = ev.start instanceof Date ? ev.start : new Date(ev.start);
+        if (isNaN(d.getTime())) return null;
+        // Determine whether this is a date-only (all-day) event. If the original
+        // DTSTART token exists and lacks a time component, treat as all-day.
+        const dtInfo = ev.uid && dtstartMap[ev.uid] ? dtstartMap[ev.uid] : null;
+        const dtValue = dtInfo && dtInfo.value ? dtInfo.value : null;
+        // If DTSTART token missing 'T', it's an all-day event
+        const isAllDay = dtValue ? !dtValue.includes('T') : (d.getHours() === 0 && d.getMinutes() === 0 && d.getSeconds() === 0);
+        if (isAllDay) return null;
+        // If we have the original token and it does NOT end with Z, the time is
+        // floating or already local — show the authored clock without converting.
+        if (dtValue && !dtValue.endsWith('Z')) {
+          // dtValue like 20260116T094500 or 20260116T094500 (no Z)
+          const timePart = dtValue.split('T')[1];
+          if (timePart) {
+            const hh = timePart.substring(0,2);
+            const mm = timePart.substring(2,4);
+            return `${hh}:${mm}`;
+          }
+        }
+        // Otherwise (dtValue endsWith Z or no original token) convert instant to Berlin
+        return d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/Berlin' });
+      } catch (e) {
+        return null;
       }
-      
-      // Bei UTC-Events (kein tz oder tz=UTC) nach Europe/Berlin konvertieren
-      const date = d instanceof Date ? d : new Date(d);
-      return date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/Berlin' });
     }
-    
+
     for (const k in events) {
       const ev = events[k];
       if (ev.type === 'VEVENT' && ev.start) {
-        let startDate = ev.start instanceof Date ? ev.start : new Date(ev.start);
-        let startTimeStr = formatTimeCorrect(ev.start);
-        
-        // Berechne den Tag in Europe/Berlin
+        const startDate = ev.start instanceof Date ? ev.start : new Date(ev.start);
         const startBerlin = new Date(startDate.toLocaleString('en-US', { timeZone: 'Europe/Berlin' }));
         startBerlin.setHours(0,0,0,0);
-        
-        // Tag im Bereich der aktuellen Woche (Montag=0)
         const diff = Math.round((startBerlin - monday) / (1000*60*60*24));
         if (diff >= 0 && diff < 7) {
-          // Versuche, den Termin einem Familienmitglied zuzuordnen
+          const startTimeStr = formatEventStart(ev);
           let matched = false;
           if (typeof ev.summary === 'string') {
             for (const member of family) {
-              const prefix = member + ": ";
+              const prefix = member + ': ';
               if (ev.summary.startsWith(prefix)) {
                 if (!days[diff][member]) days[diff][member] = [];
-                days[diff][member].push({
-                  summary: ev.summary.slice(prefix.length),
-                  start: startTimeStr,
-                  end: formatTimeCorrect(ev.end),
-                  location: ev.location || ""
-                });
-                matched = true;
-                break;
+                const item = { summary: ev.summary.slice(prefix.length), location: ev.location || '' };
+                if (startTimeStr != null) item.start = startTimeStr;
+                days[diff][member].push(item);
+                matched = true; break;
               }
             }
           }
           if (!matched) {
-            if (!days[diff]["Kalender"]) days[diff]["Kalender"] = [];
-            days[diff]["Kalender"].push({
-              summary: ev.summary,
-              start: startTimeStr,
-              end: formatTimeCorrect(ev.end),
-              location: ev.location || ""
-            });
+            if (!days[diff]['Kalender']) days[diff]['Kalender'] = [];
+            const item = { summary: ev.summary, location: ev.location || '' };
+            if (startTimeStr != null) item.start = startTimeStr;
+            days[diff]['Kalender'].push(item);
           }
         }
       }
     }
+
     res.json(days);
   } catch (e) {
-    res.status(500).json({ error: "Fehler beim Verarbeiten des iCal-Feeds.", details: e.message });
+    res.status(500).json({ error: 'Fehler beim Verarbeiten des iCal-Feeds.', details: e.message });
   }
 });
 
-// Debug-Endpunkt: Zeige rohe iCal-Events
-app.get("/api/calendar-debug", async (req, res) => {
+// Debug endpoint returns only non-time fields
+app.get('/api/calendar-debug', async (req, res) => {
   try {
-    const config = loadConfig();
-    const icalUrl = config.calendarIcalUrl;
-    if (!icalUrl) {
-      return res.status(400).json({ error: "Kein iCal-Link hinterlegt." });
-    }
+    const cfg = loadConfig();
+    const icalUrl = cfg.calendarIcalUrl;
+    if (!icalUrl) return res.status(400).json({ error: 'Kein iCal-Link hinterlegt.' });
+    const q = (req.query.q || '').toString().trim();
     const response = await fetch(icalUrl);
     const icalData = await response.text();
     const events = ical.parseICS(icalData);
-    
     const debugEvents = [];
     for (const k in events) {
       const ev = events[k];
       if (ev.type === 'VEVENT' && ev.start) {
-        debugEvents.push({
-          summary: ev.summary,
-          startRaw: ev.start,
-          startType: typeof ev.start,
-          startTz: ev.start?.tz || 'keine tz property',
-          startToString: ev.start?.toString?.() || String(ev.start),
-          startISO: ev.start instanceof Date ? ev.start.toISOString() : 'kein Date',
-          startGetHours: ev.start instanceof Date ? ev.start.getHours() : 'kein Date',
-          startLocaleBerlin: ev.start instanceof Date ? ev.start.toLocaleTimeString('de-DE', { timeZone: 'Europe/Berlin' }) : 'kein Date',
-          startFormatted: (function(){ try { return (ev.start ? (typeof ev.start === 'object' ? (ev.start.tz && ev.start.tz !== 'UTC' ? `${(ev.start instanceof Date ? ev.start : new Date(ev.start)).getUTCHours().toString().padStart(2,'0')}:${(ev.start instanceof Date ? ev.start : new Date(ev.start)).getUTCMinutes().toString().padStart(2,'0')}` : (ev.start instanceof Date ? ev.start : new Date(ev.start)).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/Berlin' })) : new Date(ev.start).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/Berlin' })) : null); } catch(e){ return `error:${e.message}`; } })(),
-          endFormatted: (function(){ try { return (ev.end ? (typeof ev.end === 'object' ? (ev.end.tz && ev.end.tz !== 'UTC' ? `${(ev.end instanceof Date ? ev.end : new Date(ev.end)).getUTCHours().toString().padStart(2,'0')}:${(ev.end instanceof Date ? ev.end : new Date(ev.end)).getUTCMinutes().toString().padStart(2,'0')}` : (ev.end instanceof Date ? ev.end : new Date(ev.end)).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/Berlin' })) : new Date(ev.end).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/Berlin' })) : null); } catch(e){ return `error:${e.message}`; } })(),
-        });
+        if (q && typeof ev.summary === 'string' && !ev.summary.includes(q)) continue;
+        debugEvents.push({ summary: ev.summary, uid: ev.uid || null, location: ev.location || '', status: ev.status || null });
       }
     }
     res.json(debugEvents);
@@ -195,4 +157,37 @@ app.get("/api/calendar-debug", async (req, res) => {
   }
 });
 
-app.listen(4000, () => console.log("Backend läuft auf Port 4000"));
+// Inspect raw event start fields for debugging timezone issues
+app.get('/api/calendar-inspect', async (req, res) => {
+  try {
+    const cfg = loadConfig();
+    const icalUrl = cfg.calendarIcalUrl;
+    if (!icalUrl) return res.status(400).json({ error: 'Kein iCal-Link hinterlegt.' });
+    const response = await fetch(icalUrl);
+    if (!response.ok) return res.status(500).json({ error: 'Fehler beim Abrufen des iCal-Feeds.' });
+    const icalData = await response.text();
+    const events = ical.parseICS(icalData);
+    const out = [];
+    for (const k in events) {
+      const ev = events[k];
+      if (ev.type === 'VEVENT' && ev.start) {
+        let startRawString = null;
+        try { startRawString = ev.start instanceof Date ? ev.start.toString() : String(ev.start); } catch (e) { startRawString = String(ev.start); }
+        let startISO = null;
+        try {
+          if (ev.start instanceof Date && !isNaN(ev.start.getTime())) startISO = ev.start.toISOString();
+          else {
+            const d = new Date(ev.start);
+            if (!isNaN(d.getTime())) startISO = d.toISOString();
+          }
+        } catch (e) { /* ignore */ }
+        out.push({ summary: ev.summary || null, uid: ev.uid || null, location: ev.location || '', startRaw: startRawString, startISO, startIsDate: ev.start instanceof Date });
+      }
+    }
+    res.json(out);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.listen(4000, () => console.log('Backend läuft auf Port 4000'));
