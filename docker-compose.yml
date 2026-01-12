@@ -5,7 +5,7 @@ services:
       - "4000:4000"
     restart: unless-stopped
     volumes:
-      - familydashboarddata/dashboard-data.json:/app/dashboard-data.json:rw
+      - familydashboarddata:/app/dashboard-data.json:rw
 
   frontend:
     build: ./frontend
