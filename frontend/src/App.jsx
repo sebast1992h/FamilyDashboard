@@ -380,7 +380,7 @@ export default function App() {
                   {weather && !weatherError && (
                     <span style={{ marginLeft: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: 6, lineHeight: 1 }}>
                       {weather.icon ? (
-                        <img src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`} alt={weather.desc || 'Wetter'} style={{ height: '1.5em', width: '1.5em', display: 'inline-block', verticalAlign: 'middle', objectFit: 'contain' }} />
+                        <img src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`} alt={weather.desc || 'Wetter'} style={{ height: '2.5em', width: '2.5em', display: 'inline-block', verticalAlign: 'middle', objectFit: 'contain' }} />
                       ) : null}
                       <span style={{ fontWeight: 600, lineHeight: 1 }}>{Math.round(weather.temp)}°C</span>
                       <span style={{ color: 'rgba(0,0,0,0.7)', lineHeight: 1 }}>{weather.desc}</span>
