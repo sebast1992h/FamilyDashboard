@@ -64,9 +64,10 @@ export default function DnDIconPlan({ icons, plan, family, days, onDrop, onRemov
                           {plan[dIdx] && plan[dIdx][mIdx] && plan[dIdx][mIdx].map((iconIdx, i) => (
                             <span
                               key={i}
-                              className="text-xl cursor-pointer border rounded bg-white dark:bg-gray-700 px-1"
+                              className="cursor-pointer border rounded bg-white dark:bg-gray-700 px-1"
                               title={icons[iconIdx]?.name || "Entfernen"}
                               onClick={() => onRemove(dIdx, mIdx, i)}
+                              style={{ fontSize: '2em', lineHeight: 1 }}
                             >
                               {icons[iconIdx]?.icon}
                             </span>

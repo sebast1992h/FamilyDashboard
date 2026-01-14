@@ -94,6 +94,39 @@ export default function App() {
     return `${b.name} (${age})`;
   }).join(', ') : null;
 
+  // Compute upcoming birthdays within next 30 days (excluding today)
+  let upcomingBirthdays = [];
+  if (config && config.birthdays && Array.isArray(config.birthdays)) {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    for (const b of config.birthdays) {
+      if (!b.date) continue;
+      const parts = b.date.split('-');
+      if (parts.length < 3) continue;
+      const birthYear = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10);
+      const day = parseInt(parts[2], 10);
+      // next occurrence in this year
+      let occ = new Date(today.getFullYear(), month - 1, day);
+      occ.setHours(0,0,0,0);
+      if (occ < today) {
+        occ = new Date(today.getFullYear() + 1, month - 1, day);
+        occ.setHours(0,0,0,0);
+      }
+      const diffDays = Math.round((occ - today) / (1000 * 60 * 60 * 24));
+      if (diffDays > 0 && diffDays <= 30) {
+        const age = occ.getFullYear() - birthYear;
+        upcomingBirthdays.push({ name: b.name, inDays: diffDays, age });
+      }
+    }
+    upcomingBirthdays.sort((a,b) => a.inDays - b.inDays);
+  }
+
+  const upcomingText = (upcomingBirthdays && upcomingBirthdays.length > 0) ? upcomingBirthdays.map(u => {
+    const when = u.inDays === 1 ? 'morgen' : `in ${u.inDays} Tagen`;
+    return `${u.name} (${when})`;
+  }).join(', ') : null;
+
   const currentTimeStr = currentTime.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false });
   // Banner overflow detection: placed before any early return so Hooks order is stable
   useEffect(() => {
@@ -113,7 +146,7 @@ export default function App() {
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
-  }, [birthdayText, currentTimeStr]);
+  }, [currentTimeStr, birthdayText, upcomingText]);
 
   // Fetch weather (via backend proxy). Show nothing if error or missing data.
   useEffect(() => {
@@ -347,14 +380,18 @@ export default function App() {
                   {weather && !weatherError && (
                     <span style={{ marginLeft: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: 6, lineHeight: 1 }}>
                       {weather.icon ? (
-                        <img src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`} alt={weather.desc || 'Wetter'} style={{ height: 18, width: 18, display: 'inline-block', verticalAlign: 'middle' }} />
+                        <img src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`} alt={weather.desc || 'Wetter'} style={{ height: '1em', width: '1em', display: 'inline-block', verticalAlign: 'middle' }} />
                       ) : null}
                       <span style={{ fontWeight: 600, lineHeight: 1 }}>{Math.round(weather.temp)}°C</span>
                       <span style={{ color: 'rgba(0,0,0,0.7)', lineHeight: 1 }}>{weather.desc}</span>
                     </span>
                   )}
                 </div>
-                <div style={{ display: 'inline-flex', alignItems: 'center', minWidth: '1px' }}>{birthdayText ? `🎉 Heute hat Geburtstag: ${birthdayText} 🎉` : ''}</div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', minWidth: '1px' }}>
+                  {birthdayText
+                    ? (`🎉 Heute hat Geburtstag: ${birthdayText} 🎉` + (upcomingText ? ` · 🎂 Anstehende Geburtstage: ${upcomingText}` : ''))
+                    : (upcomingText ? `🎂 Anstehende Geburtstage: ${upcomingText}` : '')}
+                </div>
               </div>
               </div>
             </div>
@@ -406,7 +443,7 @@ export default function App() {
                               const item = config.standardItems && config.standardItems[itemIdx];
                               if (!item) return null;
                               return (
-                                <span key={itemIdx} title={item.name} className="inline-block text-lg align-middle" style={{ filter: 'drop-shadow(0 1px 2px #0002)' }}>{item.icon}</span>
+                                <span key={itemIdx} title={item.name} className="inline-block align-middle" style={{ filter: 'drop-shadow(0 1px 2px #0002)', fontSize: '2em', lineHeight: 1 }}>{item.icon}</span>
                               );
                             })}
                           </div>
@@ -418,7 +455,7 @@ export default function App() {
                             <div className="mt-1">
                               {icalEvents[dIdx][member].map((ev, i) => (
                                 <div key={i} className="flex items-center gap-1">
-                                  <span className="inline-block">📅</span>
+                                  <span className="inline-block" style={{ fontSize: '1em', lineHeight: 1 }}>📅</span>
                                   <span>{ev.summary}{ev.start ? ` — ${ev.start}` : ''}</span>
                                 </div>
                               ))}
@@ -436,8 +473,8 @@ export default function App() {
                         {icalEvents[dIdx] && icalEvents[dIdx]["Kalender"] && icalEvents[dIdx]["Kalender"].length > 0 && (
                           <div>
                             {icalEvents[dIdx]["Kalender"].map((ev, i) => (
-                              <div key={i} className="flex items-center gap-1">
-                                <span className="inline-block">📅</span>
+                                <div key={i} className="flex items-center gap-1">
+                                <span className="inline-block" style={{ fontSize: '1em', lineHeight: 1 }}>📅</span>
                                 <span>{ev.summary}{ev.start ? ` — ${ev.start}` : ''}</span>
                               </div>
                             ))}
