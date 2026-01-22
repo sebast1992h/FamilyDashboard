@@ -4,10 +4,6 @@ services:
     ports:
       - "4000:4000"
     restart: unless-stopped
-    environment:
-      - DATA_FILE=${DATA_FILE:-/app/data/dashboard-data.json}
-    volumes:
-      - familydashboarddata:/app/data
     depends_on:
       - postgres
 
@@ -27,9 +23,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql
+      - familydashboarddata:/var/lib/postgresql
 
 volumes:
   familydashboarddata:
     external: true
-  pgdata:
