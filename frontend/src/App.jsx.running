@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   fetchNotes,
   saveNote,
@@ -70,25 +70,11 @@ function isToday(date) {
 }
 
 export default function App() {
-  const marqueeCss = `
-    @keyframes banner-marquee {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    .banner-marquee {
-      animation: banner-marquee 20s linear infinite;
-    }
-    .banner-marquee:hover {
-      animation-play-state: paused;
-    }
-  `;
-
   const [todos, setTodos] = useState([]);
   const [todosLoading, setTodosLoading] = useState(true);
   const [todosError, setTodosError] = useState("");
   const [showAddTodoModal, setShowAddTodoModal] = useState(false);
   const [newTodoText, setNewTodoText] = useState("");
-  const [newTodoDueDate, setNewTodoDueDate] = useState("");
 
   const [notesList, setNotesList] = useState([]);
   const [notesLoading, setNotesLoading] = useState(true);
@@ -106,21 +92,12 @@ export default function App() {
   const [family, setFamily] = useState([]);
   const [weekStart, setWeekStart] = useState(() => getMonday());
   const [toast, setToast] = useState({ visible: false, message: "" });
-  const [activityIcons, setActivityIcons] = useState([]);
-  const [dayActivityIcons, setDayActivityIcons] = useState({});
 
   const [isAuthenticated, setIsAuthenticated] = useState(
     typeof localStorage !== "undefined" && localStorage.getItem("dashboardAuth") === "1"
   );
 
-  const [currentPage, setCurrentPage] = useState(() => {
-    if (typeof window !== "undefined") {
-      return window.location.pathname;
-    }
-    return "/";
-  });
-
-  const currentPath = currentPage;
+  const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
   const isMobile = useIsMobile(768);
 
   const days = [
@@ -133,21 +110,6 @@ export default function App() {
     "Sonntag",
   ];
   const meals = ["Morgens", "Mittags", "Abends"];
-  
-  // Extract refresh interval from config (in milliseconds)
-  const refreshIntervalMs = config && config.refreshInterval ? Math.max(5000, Math.min(300000, config.refreshInterval * 1000)) : 30000;
-
-  // Handle browser back/forward buttons
-  useEffect(() => {
-    const handlePopState = () => {
-      if (typeof window !== "undefined") {
-        setCurrentPage(window.location.pathname);
-      }
-    };
-    
-    window.addEventListener("popstate", handlePopState);
-    return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
 
   // Load config
   useEffect(() => {
@@ -172,70 +134,10 @@ export default function App() {
     return () => clearInterval(id);
   }, []);
 
-  // Load activity icons
-  useEffect(() => {
-    async function loadActivityIcons() {
-      try {
-        const res = await fetch("/api/activity-icons");
-        if (res.ok) {
-          const icons = await res.json();
-          setActivityIcons(icons);
-        }
-      } catch (e) {
-        console.error("Error loading activity icons:", e);
-      }
-    }
-    loadActivityIcons();
-  }, []);
-
-  // Load day activity icons for this week (person-based)
-  useEffect(() => {
-    async function loadWeekDayIcons() {
-      try {
-        const icons = {};
-        const familyWithOther = [...family, "Andere"];
-        
-        for (let i = 0; i < 7; i++) {
-          const date = new Date(weekStart);
-          date.setDate(weekStart.getDate() + i);
-          const dateStr = getLocalDateString(date);
-          icons[dateStr] = {};
-          
-          // Load icons for each person on this day
-          for (const person of familyWithOther) {
-            try {
-              const res = await fetch(`/api/day-activity-icons/${dateStr}/${encodeURIComponent(person)}`);
-              if (res.ok) {
-                const dayIcons = await res.json();
-                icons[dateStr][person] = dayIcons.map(icon => icon.activityIconId);
-              } else if (res.status === 404) {
-                icons[dateStr][person] = [];
-              }
-            } catch (err) {
-              console.error(`Error loading icons for ${person} on ${dateStr}:`, err);
-              icons[dateStr][person] = [];
-            }
-          }
-        }
-        
-        setDayActivityIcons(icons);
-      } catch (e) {
-        console.error("Error loading week day icons:", e);
-      }
-    }
-    
-    if (family.length > 0) {
-      loadWeekDayIcons();
-    }
-  }, [weekStart, family]);
-
   // Load todos
   useEffect(() => {
-    let isInitialLoad = true;
     async function loadTodos() {
-      if (isInitialLoad) {
-        setTodosLoading(true);
-      }
+      setTodosLoading(true);
       try {
         const data = await fetchTodos();
         setTodos(data || []);
@@ -243,24 +145,18 @@ export default function App() {
       } catch (e) {
         setTodosError("Fehler beim Laden der To-dos");
       } finally {
-        if (isInitialLoad) {
-          setTodosLoading(false);
-          isInitialLoad = false;
-        }
+        setTodosLoading(false);
       }
     }
     loadTodos();
-    const id = setInterval(loadTodos, refreshIntervalMs);
+    const id = setInterval(loadTodos, 30000);
     return () => clearInterval(id);
-  }, [refreshIntervalMs]);
+  }, []);
 
   // Load notes
   useEffect(() => {
-    let isInitialLoad = true;
     async function loadNotes() {
-      if (isInitialLoad) {
-        setNotesLoading(true);
-      }
+      setNotesLoading(true);
       try {
         const data = await fetchNotes();
         setNotesList(data || []);
@@ -268,24 +164,18 @@ export default function App() {
       } catch (e) {
         setNotesError("Fehler beim Laden der Notizen");
       } finally {
-        if (isInitialLoad) {
-          setNotesLoading(false);
-          isInitialLoad = false;
-        }
+        setNotesLoading(false);
       }
     }
     loadNotes();
-    const id = setInterval(loadNotes, refreshIntervalMs);
+    const id = setInterval(loadNotes, 30000);
     return () => clearInterval(id);
-  }, [refreshIntervalMs]);
+  }, []);
 
   // Load calendar events
   useEffect(() => {
-    let isInitialLoad = true;
     async function loadCalendarEvents() {
-      if (isInitialLoad) {
-        setCalendarLoading(true);
-      }
+      setCalendarLoading(true);
       try {
         const data = await fetchCalendarEvents();
         setCalendarEvents(data || []);
@@ -293,24 +183,18 @@ export default function App() {
       } catch (e) {
         setCalendarError("Fehler beim Laden der Kalendereinträge");
       } finally {
-        if (isInitialLoad) {
-          setCalendarLoading(false);
-          isInitialLoad = false;
-        }
+        setCalendarLoading(false);
       }
     }
     loadCalendarEvents();
-    const id = setInterval(loadCalendarEvents, refreshIntervalMs);
+    const id = setInterval(loadCalendarEvents, 30000);
     return () => clearInterval(id);
-  }, [refreshIntervalMs]);
+  }, []);
 
   // Load meal plan
   useEffect(() => {
-    let isInitialLoad = true;
     async function loadMealPlan() {
-      if (isInitialLoad) {
-        setMealPlanLoading(true);
-      }
+      setMealPlanLoading(true);
       try {
         const data = await fetchMealPlan();
         setMealPlan(data || []);
@@ -318,16 +202,13 @@ export default function App() {
       } catch (e) {
         setMealPlanError("Fehler beim Laden des Essensplans");
       } finally {
-        if (isInitialLoad) {
-          setMealPlanLoading(false);
-          isInitialLoad = false;
-        }
+        setMealPlanLoading(false);
       }
     }
     loadMealPlan();
-    const id = setInterval(loadMealPlan, refreshIntervalMs);
+    const id = setInterval(loadMealPlan, 30000);
     return () => clearInterval(id);
-  }, [refreshIntervalMs]);
+  }, []);
 
   const todoDaysVisible = config?.todoDaysVisible || 10;
 
@@ -344,14 +225,6 @@ export default function App() {
     .filter((t) => !t.done || isRecentlyDone(t))
     .sort((a, b) => {
       if (a.done !== b.done) return a.done ? 1 : -1;
-      // offene Todos: nach Fälligkeitsdatum, dann ID
-      if (!a.done) {
-        const aDue = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
-        const bDue = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
-        if (aDue !== bDue) return aDue - bDue;
-        return (a.id || 0) - (b.id || 0);
-      }
-      // erledigte: wie bisher nach doneAt
       const aTime = a.doneAt ? new Date(a.doneAt).getTime() : 0;
       const bTime = b.doneAt ? new Date(b.doneAt).getTime() : 0;
       if (bTime !== aTime) return bTime - aTime;
@@ -361,12 +234,10 @@ export default function App() {
   async function handleAddTodo() {
     const text = (newTodoText || "").trim();
     if (!text) return;
-    const dueDate = newTodoDueDate ? new Date(newTodoDueDate).toISOString() : null;
     try {
-      const created = await saveTodo({ text, done: false, doneAt: null, dueDate });
+      const created = await saveTodo({ text, done: false, doneAt: null });
       setTodos((prev) => [...prev, created]);
       setNewTodoText("");
-      setNewTodoDueDate("");
       setShowAddTodoModal(false);
       setToast({ visible: true, message: "To-do hinzugefügt" });
       setTimeout(() => setToast({ visible: false, message: "" }), 2000);
@@ -382,7 +253,6 @@ export default function App() {
       text: todo.text,
       done: nextDone,
       doneAt: nextDone ? new Date().toISOString() : null,
-      dueDate: todo.dueDate || null,
     };
     try {
       const updated = await saveTodo(payload);
@@ -443,28 +313,31 @@ export default function App() {
     return false;
   }
 
+  if (currentPath === "/config") {
+    return (
+      <ConfigPage
+        isAuthenticated={isAuthenticated}
+        onLogin={handleLogin}
+        onBack={() => (window.location.href = "/")}
+      />
+    );
+  }
+
+  if (currentPath === "/planung") {
+    return <MealPlanPage onBack={() => (window.location.href = "/")} />;
+  }
+
+  if (currentPath === "/kalender-planung") {
+    return <CalendarEventPage onBack={() => (window.location.href = "/")} />;
+  }
+
   const normalizedFamily = (family || [])
     .map((name) => (name || "").trim())
     .filter(Boolean);
   const familyWithOther = [...normalizedFamily, "Sonstiges"];
 
-  const resolveOwner = (ev) => {
-    const summaryLower = (ev.summary || "").toLowerCase();
-    const locationLower = (ev.location || "").toLowerCase();
-    for (const name of normalizedFamily) {
-      const nameLower = name.toLowerCase();
-      const startsWithName =
-        summaryLower.startsWith(nameLower + ":") ||
-        summaryLower.startsWith(nameLower + " -") ||
-        summaryLower.startsWith(nameLower + " ");
-      const containsInLocation = locationLower.includes(nameLower);
-      if (startsWithName || containsInLocation) return name;
-    }
-    return "Sonstiges";
-  };
-
   const classifiedEvents = (calendarEvents || []).map((ev) => {
-    const owner = ev.owner || resolveOwner(ev);
+    const owner = ev.owner || "Sonstiges";
     return { ...ev, owner };
   });
 
@@ -472,328 +345,80 @@ export default function App() {
     config && config.mealVisibility
       ? config.mealVisibility
       : { Morgens: true, Mittags: true, Abends: true };
-  // Uhrzeit-State für Newsbanner
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [weather, setWeather] = useState(null);
-  const [todaysBirthdays, setTodaysBirthdays] = useState([]);
-  const [upcomingBirthdays, setUpcomingBirthdays] = useState([]);
-  const [bannerShouldScroll, setBannerShouldScroll] = useState(false);
-  const bannerContainerRef = useRef(null);
-  const bannerContentRef = useRef(null);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 500); // Update every half second
-
-    return () => clearInterval(timer);
-  }, []);
-
-  // Wetter laden (nutzt /api/weather; Key/Koordinaten aus Config/ENV)
-  useEffect(() => {
-    let cancelled = false;
-    const fetchWeather = async () => {
-      try {
-        const res = await fetch("/api/weather");
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        if (cancelled) return;
-        setWeather({
-          temp: typeof data.temp === "number" ? Math.round(data.temp) : null,
-          desc: data.desc || "",
-          icon: data.icon || null,
-          city: data.city || ""
-        });
-      } catch (err) {
-        if (cancelled) return;
-        setWeather(null);
-      }
-    };
-
-    fetchWeather();
-    const intervalId = setInterval(fetchWeather, 10 * 60 * 1000); // alle 10 Minuten
-    return () => {
-      cancelled = true;
-      clearInterval(intervalId);
-    };
-  }, []);
-
-  // Geburtstage für heute aus Config ableiten
-  useEffect(() => {
-    if (!config || !Array.isArray(config.birthdays)) {
-      setTodaysBirthdays([]);
-      setUpcomingBirthdays([]);
-      return;
-    }
-
-    const today = new Date();
-    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const lookahead = Math.min(365, Math.max(1, Number(config.birthdayLookaheadDays ?? 30) || 30));
-    const upcoming = [];
-    const matches = config.birthdays
-      .map((entry) => {
-        const name = entry?.name || "";
-        const rawDate = entry?.date || entry?.birthday;
-        if (!name || !rawDate) return null;
-        const birthDate = new Date(rawDate);
-        if (Number.isNaN(birthDate.getTime())) return null;
-        const thisYear = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
-        const isToday = thisYear.getTime() === todayMidnight.getTime();
-
-        // Bestimme nächstes Geburtstagsdatum (dieses Jahr oder nächstes)
-        let nextBirthday = thisYear;
-        if (thisYear < todayMidnight) {
-          nextBirthday = new Date(today.getFullYear() + 1, birthDate.getMonth(), birthDate.getDate());
-        }
-
-        const daysUntil = Math.round((nextBirthday - todayMidnight) / (1000 * 60 * 60 * 24));
-        const ageAtNext = nextBirthday.getFullYear() - birthDate.getFullYear();
-
-        if (isToday) {
-          return { name, age: ageAtNext };
-        }
-
-        if (daysUntil > 0 && daysUntil <= lookahead) {
-          upcoming.push({ name, age: ageAtNext, inDays: daysUntil });
-        }
-        return null;
-      })
-      .filter(Boolean);
-
-    setTodaysBirthdays(matches);
-    setUpcomingBirthdays(upcoming.sort((a, b) => a.inDays - b.inDays));
-  }, [config]);
-
-  // Banner-Scrolling nur aktivieren, wenn Inhalt breiter als Container ist
-  useEffect(() => {
-    const measure = () => {
-      const container = bannerContainerRef.current;
-      const content = bannerContentRef.current;
-      if (!container || !content) return;
-      const needsScroll = content.scrollWidth > container.clientWidth;
-      setBannerShouldScroll(needsScroll);
-    };
-
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, [weather, todaysBirthdays, upcomingBirthdays]);
-
-  // Conditional page routing - must be after all hooks
-  if (currentPath === "/config") {
-    return (
-      <ConfigPage
-        isAuthenticated={isAuthenticated}
-        onLogin={handleLogin}
-        onBack={() => {
-          setCurrentPage("/");
-          window.history.pushState({}, "", "/");
-        }}
-      />
-    );
-  }
-
-  if (currentPath === "/planung") {
-    return <MealPlanPage key="meal-plan" onBack={() => {
-      setCurrentPage("/");
-      window.history.pushState({}, "", "/");
-    }} />;
-  }
-
-  if (currentPath === "/kalender-planung") {
-    return <CalendarEventPage key="calendar-event" onBack={() => {
-      setCurrentPage("/");
-      window.history.pushState({}, "", "/");
-    }} />;
-  }
 
   return (
     <div
       className="min-h-screen p-4"
       style={{ background: "var(--bg-main)", color: "var(--text-main)" }}
     >
-      {/* Header: Newsbanner oben, Buttons rechts */}
-      <div className="flex items-center mb-4 gap-4 flex-wrap">
-        {/* Newsbanner mit Uhr links im Banner */}
-        <div className="flex items-center gap-3 flex-1 px-6 py-2 bg-blue-900 bg-opacity-30 rounded-lg border border-blue-700 min-w-[240px]">
-          <style>{marqueeCss}</style>
-          <div className="text-xl font-semibold flex-shrink-0" style={{ color: "var(--accent)" }}>
-            {currentTime.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
-          </div>
-          {(weather || todaysBirthdays.length > 0 || upcomingBirthdays.length > 0) ? (
-            <div className="flex-1 overflow-hidden" ref={bannerContainerRef}>
-              <div
-                className={`flex items-center gap-6 text-base text-white/80 whitespace-nowrap ${bannerShouldScroll ? 'banner-marquee' : ''}`}
-                style={bannerShouldScroll ? { width: '200%' } : undefined}
-              >
-                {/* first copy */}
-                <div className="flex items-center gap-6" ref={bannerContentRef}>
-                  {weather ? (
-                    <div className="flex items-center gap-2 min-w-0">
-                      {weather.icon ? (
-                        <img
-                          src={`https://openweathermap.org/img/wn/${weather.icon}.png`}
-                          alt=""
-                          className="w-12 h-12"
-                          loading="lazy"
-                        />
-                      ) : null}
-                      <span className="whitespace-nowrap">
-                        {`${weather.temp !== null ? weather.temp + '°C' : ''}${weather.desc ? ' · ' + weather.desc : ''}`.trim() || 'Wetter'}
-                      </span>
-                    </div>
-                  ) : null}
-                  {todaysBirthdays.length > 0 ? (
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span
-                        className="w-12 h-12 flex items-center justify-center text-3xl"
-                        aria-hidden="true"
-                      >
-                        🎂
-                      </span>
-                      <span className="whitespace-nowrap">
-                        {todaysBirthdays.map((b) => `${b.name} (${b.age})`).join(', ')}
-                      </span>
-                    </div>
-                  ) : null}
-                  {upcomingBirthdays.length > 0 ? (
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span
-                        className="w-12 h-12 flex items-center justify-center text-3xl"
-                        aria-hidden="true"
-                      >
-                        🎉
-                      </span>
-                      <span className="whitespace-nowrap">
-                        {`Anstehende Geburtstage: ${upcomingBirthdays.map((b) => `${b.name} (in ${b.inDays} Tagen)`).join(', ')}`}
-                      </span>
-                    </div>
-                  ) : null}
-                </div>
-                {/* duplicate for seamless scroll (nur wenn nötig) */}
-                {bannerShouldScroll ? (
-                  <div className="flex items-center gap-6" aria-hidden="true">
-                    {weather ? (
-                      <div className="flex items-center gap-2 min-w-0">
-                        {weather.icon ? (
-                          <img
-                            src={`https://openweathermap.org/img/wn/${weather.icon}.png`}
-                            alt=""
-                            className="w-12 h-12"
-                            loading="lazy"
-                          />
-                        ) : null}
-                        <span className="whitespace-nowrap">
-                          {`${weather.temp !== null ? weather.temp + '°C' : ''}${weather.desc ? ' · ' + weather.desc : ''}`.trim() || 'Wetter'}
-                        </span>
-                      </div>
-                    ) : null}
-                    {todaysBirthdays.length > 0 ? (
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span
-                          className="w-12 h-12 flex items-center justify-center text-3xl"
-                          aria-hidden="true"
-                        >
-                          🎂
-                        </span>
-                        <span className="whitespace-nowrap">
-                          {todaysBirthdays.map((b) => `${b.name} (${b.age})`).join(', ')}
-                        </span>
-                      </div>
-                    ) : null}
-                    {upcomingBirthdays.length > 0 ? (
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span
-                          className="w-12 h-12 flex items-center justify-center text-3xl"
-                          aria-hidden="true"
-                        >
-                          🎉
-                        </span>
-                        <span className="whitespace-nowrap">
-                          {`Anstehende Geburtstage: ${upcomingBirthdays.map((b) => `${b.name} (in ${b.inDays} Tagen)`).join(', ')}`}
-                        </span>
-                      </div>
-                    ) : null}
-                  </div>
-                ) : null}
-              </div>
-            </div>
-          ) : null}
-        </div>
-
-        {/* Navigation Buttons rechts */}
-        <div className="flex gap-2">
-          <button
-            onClick={() => {
-              setCurrentPage("/planung");
-              window.history.pushState({}, "", "/planung");
-            }}
-            className="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 whitespace-nowrap"
-          >
-            🍽
-          </button>
-          <button
-            onClick={() => {
-              setCurrentPage("/kalender-planung");
-              window.history.pushState({}, "", "/kalender-planung");
-            }}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 whitespace-nowrap"
-          >
-            📅
-          </button>
-        </div>
-      </div>
-
-      {/* Wochenkalender Titel + Wochenwechsel unter dem Banner */}
-      <div className="flex items-center justify-start gap-3 mb-4 flex-wrap">
-        <h1 className="text-3xl font-bold" style={{ color: "var(--accent)" }}>
-          Wochenkalender
-        </h1>
-        <button
-          onClick={() =>
-            setWeekStart((prev) => {
-              const d = new Date(prev);
-              d.setDate(prev.getDate() - 7);
-              return d;
-            })
-          }
-          className="px-3 py-1 rounded bg-slate-700 text-white hover:bg-slate-600"
-          aria-label="Vorherige Woche"
-        >
-          ←
-        </button>
-        <div className="text-sm text-gray-300 min-w-[150px] text-center">
-          {(() => {
-            const start = new Date(weekStart);
-            const end = new Date(weekStart);
-            end.setDate(start.getDate() + 6);
-            const fmt = (d) => d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" });
-            return `${fmt(start)} – ${fmt(end)}`;
-          })()}
+      <div className="flex justify-between items-center mb-6">
+        <div className="text-center flex-1">
+          <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--accent)" }}>
+            Family Dashboard
+          </h1>
         </div>
         <button
-          onClick={() => setWeekStart(getMonday())}
-          className="px-3 py-1 rounded bg-amber-700 text-white hover:bg-amber-600"
+          onClick={() => (window.location.href = "/planung")}
+          className="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 whitespace-nowrap ml-2"
         >
-          Heute
+          🍽
         </button>
         <button
-          onClick={() =>
-            setWeekStart((prev) => {
-              const d = new Date(prev);
-              d.setDate(prev.getDate() + 7);
-              return d;
-            })
-          }
-          className="px-3 py-1 rounded bg-slate-700 text-white hover:bg-slate-600"
-          aria-label="Nächste Woche"
+          onClick={() => (window.location.href = "/kalender-planung")}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 whitespace-nowrap ml-2"
         >
-          →
+          📅
         </button>
       </div>
 
       {/* Kalender */}
       <div className="mb-6">
+        <h2 className="text-2xl font-bold mb-4" style={{ color: "var(--accent)" }}>
+          🗓 Wochenkalender
+        </h2>
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <button
+            onClick={() =>
+              setWeekStart((prev) => {
+                const d = new Date(prev);
+                d.setDate(prev.getDate() - 7);
+                return d;
+              })
+            }
+            className="px-3 py-1 rounded bg-slate-700 text-white hover:bg-slate-600"
+            aria-label="Vorherige Woche"
+          >
+            ←
+          </button>
+          <div className="text-sm text-gray-300">
+            {(() => {
+              const start = new Date(weekStart);
+              const end = new Date(weekStart);
+              end.setDate(start.getDate() + 6);
+              const fmt = (d) => d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" });
+              return `${fmt(start)} – ${fmt(end)}`;
+            })()}
+          </div>
+          <button
+            onClick={() => setWeekStart(getMonday())}
+            className="px-3 py-1 rounded bg-amber-700 text-white hover:bg-amber-600"
+          >
+            Heute
+          </button>
+          <button
+            onClick={() =>
+              setWeekStart((prev) => {
+                const d = new Date(prev);
+                d.setDate(prev.getDate() + 7);
+                return d;
+              })
+            }
+            className="px-3 py-1 rounded bg-slate-700 text-white hover:bg-slate-600"
+            aria-label="Nächste Woche"
+          >
+            →
+          </button>
+        </div>
         <div className="overflow-x-auto card">
           {calendarLoading ? (
             <div className="p-4">Lade Kalender...</div>
@@ -841,72 +466,38 @@ export default function App() {
                           const monday = weekStart;
                           const date = new Date(monday);
                           date.setDate(monday.getDate() + dayIndex);
-                          const dateStr = getLocalDateString(date);
+                          const dateStr = date.toISOString().split("T")[0];
 
                           const dayEvents = classifiedEvents.filter((ev) => {
-                            const evStart = new Date(ev.start);
-                            const evStartStr = getLocalDateString(evStart);
-                            
-                            // Für mehrtägige Events: prüfe ob der Tag im Zeitraum liegt
-                            if (ev.end && ev.allDay) {
-                              const evEnd = new Date(ev.end);
-                              // Setze beide auf Mitternacht für Vergleich
-                              const checkDate = new Date(date);
-                              checkDate.setHours(0, 0, 0, 0);
-                              const startDate = new Date(evStart);
-                              startDate.setHours(0, 0, 0, 0);
-                              const endDate = new Date(evEnd);
-                              endDate.setHours(0, 0, 0, 0);
-                              
-                              // Event anzeigen wenn Tag zwischen Start und Ende liegt
-                              return checkDate >= startDate && checkDate < endDate && ev.owner === memberName;
-                            }
-                            
-                            // Für normale Events: nur am Starttag anzeigen
-                            return evStartStr === dateStr && ev.owner === memberName;
+                            const evDate = new Date(ev.start);
+                            const evDateStr = evDate.toISOString().split("T")[0];
+                            return evDateStr === dateStr && ev.owner === memberName;
                           });
 
                           return (
                             <td
                               key={dayIndex}
-                              className="border p-1 align-top"
+                              className="border p-1 align-top h-24"
                               style={{
                                 backgroundColor: isToday(date) ? "#2d2416" : "#232526",
                                 color: isToday(date) ? "#d97706" : "inherit",
                               }}
                             >
                               <div className="text-xs space-y-1">
-                                {/* Activity Icons für diese Person an diesem Tag */}
-                                {(dayActivityIcons[dateStr]?.[memberName] || []).length > 0 && (
-                                  <div className="flex flex-wrap gap-2 mb-2">
-                                    {dayActivityIcons[dateStr][memberName].map((iconId) => {
-                                      const icon = activityIcons.find(a => a.id === iconId);
-                                      return icon ? (
-                                        <span key={iconId} title={icon.activity} className="text-5xl">
-                                          {icon.icon}
-                                        </span>
-                                      ) : null;
-                                    })}
-                                  </div>
-                                )}
-                                
                                 {dayEvents.map((ev) => (
                                   <div
                                     key={ev.id}
                                     className="p-2 rounded text-xs border-l-2"
                                     style={{ backgroundColor: "#1f2937", borderColor: "#475569", color: "#e2e8f0" }}
                                   >
-                                    <div className="flex items-center gap-1">
-                                      <div className="truncate">
-                                        {ev.uid && ev.start && !ev.allDay
-                                          ? `${new Date(ev.start).toLocaleTimeString("de-DE", {
-                                              hour: "2-digit",
-                                              minute: "2-digit",
-                                            })} `
-                                          : ""}
-                                        {ev.summary.replace(memberName + ":", "").trim()}
-                                      </div>
-                                      {ev.uid && <span className="text-sm" title="iCal Ereignis">📅</span>}
+                                    <div className="truncate">
+                                      {ev.uid && ev.start
+                                        ? `${new Date(ev.start).toLocaleTimeString("de-DE", {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                          })} `
+                                        : ""}
+                                      {ev.summary.replace(memberName + ":", "").trim()}
                                     </div>
                                   </div>
                                 ))}
@@ -927,6 +518,7 @@ export default function App() {
             </>
           )}
         </div>
+        <p className="text-sm text-gray-500 mt-2 px-2">💡 Klicke auf "📅" oben, um Termine zu bearbeiten.</p>
       </div>
 
       {/* Essensplan + Todos + Notizen */}
@@ -1030,6 +622,7 @@ export default function App() {
                 </tbody>
               </table>
             )}
+            <p className="text-sm text-gray-500 mt-2 px-2">💡 Klicke auf "🍽" oben, um Mahlzeiten zu bearbeiten.</p>
           </div>
         </div>
 
@@ -1070,13 +663,6 @@ export default function App() {
                       />
                       <div className="flex-1">
                         <div className={done ? "line-through text-green-400" : ""}>{todo.text}</div>
-                        {!done && todo.dueDate && (
-                          <div className="text-xs mt-1">
-                            <span className={new Date(todo.dueDate) < new Date() ? "text-red-400" : "text-slate-300"}>
-                              Fällig am {new Date(todo.dueDate).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" })}
-                            </span>
-                          </div>
-                        )}
                         {done && recentlyDone && todo.doneAt && (
                           <div className="text-xs text-slate-400 mt-1">
                             Erledigt am
@@ -1156,21 +742,11 @@ export default function App() {
               }}
               autoFocus
             />
-            <div className="mb-4">
-              <label className="block text-sm mb-1">Fälligkeitsdatum (optional)</label>
-              <input
-                type="date"
-                className="w-full rounded px-3 py-2 bg-slate-700 text-slate-100 border border-slate-600"
-                value={newTodoDueDate}
-                onChange={(e) => setNewTodoDueDate(e.target.value)}
-              />
-            </div>
             <div className="flex gap-2 justify-end">
               <button
                 onClick={() => {
                   setShowAddTodoModal(false);
                   setNewTodoText("");
-                  setNewTodoDueDate("");
                 }}
                 className="px-3 py-2 rounded bg-slate-700 text-slate-200 hover:bg-slate-600"
               >
@@ -1201,4 +777,3 @@ export default function App() {
     </div>
   );
 }
-

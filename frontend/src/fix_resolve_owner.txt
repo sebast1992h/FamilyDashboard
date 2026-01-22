@@ -1,0 +1,23 @@
+Add this code after line 338 (after the familyWithOther definition):
+
+  const resolveOwner = (ev) => {
+    const summaryLower = (ev.summary || "").toLowerCase();
+    const locationLower = (ev.location || "").toLowerCase();
+    for (const name of normalizedFamily) {
+      const nameLower = name.toLowerCase();
+      const startsWithName =
+        summaryLower.startsWith(nameLower + ":") ||
+        summaryLower.startsWith(nameLower + " -") ||
+        summaryLower.startsWith(nameLower + " ");
+      const containsInLocation = locationLower.includes(nameLower);
+      if (startsWithName || containsInLocation) return name;
+    }
+    return "Sonstiges";
+  };
+
+And replace line 340 (the classifiedEvents map):
+  const classifiedEvents = (calendarEvents || []).map((ev) => {
+-    const owner = ev.owner || "Sonstiges";
++    const owner = ev.owner || resolveOwner(ev);
+     return { ...ev, owner };
+   });

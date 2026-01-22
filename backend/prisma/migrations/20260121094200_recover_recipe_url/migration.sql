@@ -1,0 +1,1 @@
+-- This migration intentionally left empty as it was a recovery migration

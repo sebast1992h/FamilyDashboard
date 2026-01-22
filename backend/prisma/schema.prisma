@@ -1,0 +1,87 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Beispielmodell
+model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  name  String
+  createdAt DateTime @default(now())
+}
+
+model Note {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Todo {
+  id        Int      @id @default(autoincrement())
+  text      String
+  done      Boolean @default(false)
+  doneAt    DateTime?
+  dueDate   DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MealPlan {
+  id        Int      @id @default(autoincrement())
+  date      DateTime // Vollständiges Datum (YYYY-MM-DD)
+  mealType  Int      // 0=Morgens, 1=Mittags, 2=Abends
+  meal      String
+  recipeUrl String?  // Link zum Rezept
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CalendarEvent {
+  id        Int      @id @default(autoincrement())
+  summary   String
+  location  String?
+  start     DateTime
+  end       DateTime?
+  allDay    Boolean @default(false)
+  uid       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([uid, start])
+}
+
+model Config {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String   // JSON als String gespeichert
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ActivityIcon {
+  id        Int      @id @default(autoincrement())
+  activity  String   @unique  // z.B. "Büro", "Sport"
+  icon      String              // Emoji oder Icon, z.B. "💻"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DayActivityIcon {
+  id             Int      @id @default(autoincrement())
+  date           DateTime // Datum (YYYY-MM-DD)
+  personName     String   // Name der Person (z.B. "Papa", "Mama", "Hanna")
+  activityIconId Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([date, personName, activityIconId])
+}

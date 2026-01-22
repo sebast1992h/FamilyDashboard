@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
+    "@prisma/client": "^6.19.2",
+    "prisma": "^6.19.2",
     "react-beautiful-dnd": "^13.1.1"
   }
 }

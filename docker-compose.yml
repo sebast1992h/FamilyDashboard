@@ -6,11 +6,10 @@ services:
     restart: unless-stopped
     environment:
       - DATA_FILE=${DATA_FILE:-/app/data/dashboard-data.json}
-      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
-      - WEATHER_LAT=${WEATHER_LAT:-53.921852}
-      - WEATHER_LON=${WEATHER_LON:-10.743604}
     volumes:
       - familydashboarddata:/app/data
+    depends_on:
+      - postgres
 
   frontend:
     build: ./frontend
@@ -20,6 +19,17 @@ services:
       - backend
     restart: unless-stopped
 
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: family_dashboard
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+
 volumes:
   familydashboarddata:
     external: true
+  pgdata:
