@@ -501,7 +501,7 @@ async function processIcalData(icalUrl) {
     const importedEvents = [];
     const now = new Date();
     const windowStart = new Date(now);
-    windowStart.setDate(windowStart.getDate() - 7);
+    windowStart.setHours(0, 0, 0, 0); // Start von heute (Mitternacht)
     const windowEnd = new Date(now);
     windowEnd.setFullYear(windowEnd.getFullYear() + 1); // import bis zu 1 Jahr im Voraus
 
