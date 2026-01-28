@@ -135,6 +135,23 @@ export default function CalendarEventPage({ onBack }) {
     return () => clearInterval(interval);
   }, []);
 
+  // Auto-jump zur aktuellen Woche bei Wochenwechsel (z.B. Sonntag -> Montag)
+  useEffect(() => {
+    const checkWeekChange = () => {
+      const currentMonday = getCurrentMonday();
+      
+      if (weekStart.getTime() !== currentMonday.getTime()) {
+        console.log("📅 Woche gewechselt, springe zur aktuellen Woche");
+        setWeekStart(currentMonday);
+      }
+    };
+
+    // Prüfe alle 10 Sekunden
+    const interval = setInterval(checkWeekChange, 10000);
+    
+    return () => clearInterval(interval);
+  }, [weekStart]);
+
   // Lade alle Day Activity Icons für diese Woche pro Person
   useEffect(() => {
     async function loadWeekDayIcons() {
