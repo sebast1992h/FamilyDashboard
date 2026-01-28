@@ -89,6 +89,9 @@ export default function App() {
   const [showAddTodoModal, setShowAddTodoModal] = useState(false);
   const [newTodoText, setNewTodoText] = useState("");
   const [newTodoDueDate, setNewTodoDueDate] = useState("");
+  const [editTodo, setEditTodo] = useState(null);
+  const [editTodoText, setEditTodoText] = useState("");
+  const [editTodoDueDate, setEditTodoDueDate] = useState("");
 
   const [notesList, setNotesList] = useState([]);
   const [notesLoading, setNotesLoading] = useState(true);
@@ -1069,7 +1072,18 @@ export default function App() {
                         aria-label="To-do erledigt"
                       />
                       <div className="flex-1">
-                        <div className={done ? "line-through text-green-400" : ""}>{todo.text}</div>
+                        <div 
+                          className={`cursor-pointer hover:text-blue-400 transition ${done ? "line-through text-green-400" : ""}`}
+                          onClick={() => {
+                            console.log("TODO clicked:", todo);
+                            setEditTodo(todo);
+                            setEditTodoText(todo.text);
+                            setEditTodoDueDate(todo.dueDate ? todo.dueDate.split('T')[0] : "");
+                          }}
+                          title="Klick zum Bearbeiten"
+                        >
+                          {todo.text}
+                        </div>
                         {!done && todo.dueDate && (
                           <div className="text-xs mt-1">
                             <span className={new Date(todo.dueDate) < new Date() ? "text-red-400" : "text-slate-300"}>
@@ -1181,6 +1195,65 @@ export default function App() {
                 className="px-4 py-2 rounded bg-green-700 text-white hover:bg-green-600"
               >
                 Hinzufügen
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Todo Modal */}
+      {editTodo && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 rounded-lg shadow-lg p-6 w-full max-w-sm">
+            <h3 className="text-xl font-bold mb-4" style={{ color: "var(--accent)" }}>
+              To-do bearbeiten
+            </h3>
+            <input
+              type="text"
+              className="w-full rounded px-3 py-2 mb-4 bg-slate-700 text-slate-100 border border-slate-600"
+              placeholder="To-do Text eingeben…"
+              value={editTodoText}
+              onChange={(e) => setEditTodoText(e.target.value)}
+              autoFocus
+            />
+            <div className="mb-4">
+              <label className="block text-sm mb-1">Fälligkeitsdatum (optional)</label>
+              <input
+                type="date"
+                className="w-full rounded px-3 py-2 bg-slate-700 text-slate-100 border border-slate-600"
+                value={editTodoDueDate}
+                onChange={(e) => setEditTodoDueDate(e.target.value)}
+              />
+            </div>
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => setEditTodo(null)}
+                className="px-3 py-2 rounded bg-slate-700 text-slate-200 hover:bg-slate-600"
+              >
+                Abbrechen
+              </button>
+              <button
+                onClick={async () => {
+                  if (!editTodoText.trim()) return;
+                  try {
+                    const updated = await saveTodo({
+                      id: editTodo.id,
+                      text: editTodoText,
+                      done: editTodo.done,
+                      doneAt: editTodo.doneAt,
+                      dueDate: editTodoDueDate ? new Date(editTodoDueDate).toISOString() : null
+                    });
+                    setTodos((prev) => prev.map((t) => (t.id === editTodo.id ? updated : t)));
+                    setEditTodo(null);
+                    setToast({ visible: true, message: "To-do aktualisiert" });
+                    setTimeout(() => setToast({ visible: false, message: "" }), 2000);
+                  } catch (e) {
+                    setTodosError("Fehler beim Speichern des To-dos");
+                  }
+                }}
+                className="px-4 py-2 rounded bg-green-700 text-white hover:bg-green-600"
+              >
+                Speichern
               </button>
             </div>
           </div>
