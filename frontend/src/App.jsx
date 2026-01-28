@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import {
   fetchNotes,
   saveNote,
@@ -96,6 +97,9 @@ export default function App() {
   const [notesList, setNotesList] = useState([]);
   const [notesLoading, setNotesLoading] = useState(true);
   const [notesError, setNotesError] = useState("");
+  const [showNotesModal, setShowNotesModal] = useState(false);
+  const [notesEditMode, setNotesEditMode] = useState(true);
+  const [notesModalText, setNotesModalText] = useState("");
 
   const [mealPlan, setMealPlan] = useState([]);
   const [mealPlanLoading, setMealPlanLoading] = useState(true);
@@ -1063,7 +1067,7 @@ export default function App() {
                   const done = !!todo.done;
                   const recentlyDone = isRecentlyDone(todo);
                   return (
-                    <li key={todo.id} className="py-2 flex items-baseline gap-3">
+                    <li key={todo.id} className="py-2 flex items-center gap-3">
                       <input
                         type="checkbox"
                         className="h-5 w-5 accent-green-600 flex-shrink-0"
@@ -1073,7 +1077,7 @@ export default function App() {
                       />
                       <div className="flex-1">
                         <div 
-                          className={`cursor-pointer hover:text-blue-400 transition ${done ? "line-through text-green-400" : ""}`}
+                          className={`cursor-pointer hover:text-blue-400 transition text-sm ${done ? "line-through text-green-400" : ""}`}
                           onClick={() => {
                             console.log("TODO clicked:", todo);
                             setEditTodo(todo);
@@ -1123,33 +1127,157 @@ export default function App() {
           <h2 className="text-2xl font-bold mb-4" style={{ color: "var(--accent)" }}>
             📝 Notizen
           </h2>
-          <div className="card p-4 flex-1 flex flex-col">
+          <div 
+            className="card p-4 flex-1 flex flex-col overflow-hidden cursor-pointer hover:ring-2 hover:ring-slate-500 transition"
+            onClick={() => {
+              setNotesModalText(notesList.length > 0 ? notesList[0].content || "" : "");
+              setNotesEditMode(true);
+              setShowNotesModal(true);
+            }}
+          >
             {notesLoading ? (
-              <div className="p-2">Lade Notizen…</div>
+              <div className="p-2 text-sm">Lade Notizen…</div>
             ) : notesError ? (
-              <div className="text-red-500 p-2">{notesError}</div>
+              <div className="text-red-500 p-2 text-sm">{notesError}</div>
             ) : (
-              <textarea
-                className="w-full bg-transparent text-slate-100 text-sm resize-none outline-none flex-1 min-h-0"
-                placeholder="Notiz eingeben…"
-                rows="12"
-                value={
-                  notesList.length > 0
-                    ? notesList[0].content || ""
-                    : ""
-                }
-                onChange={(e) => {
-                  if (notesList.length > 0) {
-                    handleSaveNote(notesList[0], "content", e.target.value);
-                  } else {
-                    handleAddNote("", e.target.value);
-                  }
-                }}
-              />
+              <div className="prose prose-invert prose-lg max-w-none flex-1 overflow-y-auto">
+                <ReactMarkdown>
+                  {notesList.length > 0 && notesList[0].content
+                    ? notesList[0].content
+                    : "*Klicken zum Bearbeiten...*"}
+                </ReactMarkdown>
+              </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Notizen Modal */}
+      {showNotesModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 rounded-lg shadow-lg p-6 w-full max-w-4xl max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold" style={{ color: "var(--accent)" }}>
+                📝 Notizen bearbeiten
+              </h3>
+              <div className="flex gap-1 bg-slate-700 rounded-lg p-1">
+                <button
+                  onClick={() => setNotesEditMode(true)}
+                  className={`px-3 py-1 rounded text-sm transition ${
+                    notesEditMode
+                      ? "bg-slate-600 text-white"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  ✏️ Bearbeiten
+                </button>
+                <button
+                  onClick={() => setNotesEditMode(false)}
+                  className={`px-3 py-1 rounded text-sm transition ${
+                    !notesEditMode
+                      ? "bg-slate-600 text-white"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  👁️ Vorschau
+                </button>
+              </div>
+            </div>
+            <div className="flex-1 overflow-hidden flex gap-4 min-h-0">
+              {/* Editor / Preview */}
+              <div className="flex-1 flex flex-col min-h-0">
+                {notesEditMode ? (
+                  <textarea
+                    className="w-full bg-slate-700 text-slate-100 text-lg resize-none outline-none flex-1 min-h-0 font-mono p-3 rounded border border-slate-600"
+                    placeholder="Notiz eingeben… (Markdown wird unterstützt)"
+                    value={notesModalText}
+                    onChange={(e) => setNotesModalText(e.target.value)}
+                    autoFocus
+                  />
+                ) : (
+                  <div className="prose prose-invert prose-lg max-w-none flex-1 overflow-y-auto bg-slate-700 p-3 rounded border border-slate-600">
+                    <ReactMarkdown>
+                      {notesModalText || "*Keine Notizen vorhanden*"}
+                    </ReactMarkdown>
+                  </div>
+                )}
+              </div>
+              {/* Markdown Cheat Sheet */}
+              {notesEditMode && (
+                <div className="w-64 bg-slate-700/50 rounded border border-slate-600 p-3 overflow-y-auto text-xs">
+                  <h4 className="font-bold text-slate-300 mb-2">📖 Markdown Hilfe</h4>
+                  <div className="space-y-2 text-slate-400">
+                    <div>
+                      <span className="text-slate-300 font-mono"># Überschrift 1</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-300 font-mono">## Überschrift 2</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-300 font-mono">### Überschrift 3</span>
+                    </div>
+                    <hr className="border-slate-600" />
+                    <div>
+                      <span className="text-slate-300 font-mono">**fett**</span>
+                      <span className="ml-2">→ <strong>fett</strong></span>
+                    </div>
+                    <div>
+                      <span className="text-slate-300 font-mono">*kursiv*</span>
+                      <span className="ml-2">→ <em>kursiv</em></span>
+                    </div>
+                    <div>
+                      <span className="text-slate-300 font-mono">~~durchgestrichen~~</span>
+                    </div>
+                    <hr className="border-slate-600" />
+                    <div>
+                      <span className="text-slate-300 font-mono">- Aufzählung</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-300 font-mono">1. Nummerierung</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-300 font-mono">- [ ] Checkbox</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-300 font-mono">- [x] Erledigt</span>
+                    </div>
+                    <hr className="border-slate-600" />
+                    <div>
+                      <span className="text-slate-300 font-mono">`Code`</span>
+                      <span className="ml-2">→ <code className="bg-slate-600 px-1 rounded">Code</code></span>
+                    </div>
+                    <div>
+                      <span className="text-slate-300 font-mono">&gt; Zitat</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-300 font-mono">[Link](url)</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-300 font-mono">---</span>
+                      <span className="ml-2">→ Trennlinie</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end gap-2 mt-4">
+              <button
+                onClick={() => {
+                  if (notesList.length > 0) {
+                    handleSaveNote(notesList[0], "content", notesModalText);
+                  } else if (notesModalText.trim()) {
+                    handleAddNote("", notesModalText);
+                  }
+                  setShowNotesModal(false);
+                }}
+                className="px-4 py-2 rounded bg-slate-600 hover:bg-slate-500 text-white transition"
+              >
+                Schließen
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal */}
       {showAddTodoModal && (
