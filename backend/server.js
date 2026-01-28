@@ -530,9 +530,7 @@ async function processIcalData(icalUrl) {
         console.log(`\n=== EVENT PROCESSING DEBUG ===`);
         console.log(`  Summary: ${summary}`);
         console.log(`  UID: ${uid}`);
-        console.log(`  Raw baseStart from ical-Library: ${baseStart}`);
-        console.log(`  baseStart as ISO: ${baseStartISOString}`);
-        console.log(`  Has TZID (from UID map): ${hasTZID}`);
+        console.log(`  Has RRULE: ${!!ev.rrule}`);
         if (dtStartInfo && dtStartInfo.rawDTStart) {
           console.log(`  Manually parsed rawDTStart: ${dtStartInfo.rawDTStart.toISOString()}`);
         }
@@ -572,7 +570,7 @@ async function processIcalData(icalUrl) {
         if (ev.rrule) {
           const dates = ev.rrule.between(windowStart, windowEnd, true);
           for (const occ of dates) {
-            // Für UTC-Events: verwende manuell geparste DTSTART wenn verfügbar
+            // RRULE liefert bereits korrekte UTC-Zeiten, keine Korrektur nötig
             let occStart = new Date(occ);
             if (dtStartInfo && dtStartInfo.rawDTStart && !hasTZID) {
               // Berechne Offset von der ical-Library-Parse zur manuellen Parse
@@ -583,18 +581,18 @@ async function processIcalData(icalUrl) {
               console.log(`    Using manually parsed offset for recurring instance: +${offsetMs}ms`);
             }
             
-            const corrected = correctTime(occStart);
-            const occEnd = durationMs ? new Date(corrected.getTime() + durationMs) : null;
-            console.log(`    Recurring instance: storing start=${corrected.toISOString()}`);
+            // RRULE-Zeiten sind bereits in UTC, KEINE correctTime-Korrektur anwenden!
+            const occEnd = durationMs ? new Date(occStart.getTime() + durationMs) : null;
+            console.log(`    Recurring instance: storing start=${occStart.toISOString()}`);
             try {
               // Deduplizieren: gleicher uid + start
-              const exists = await prisma.calendarEvent.findFirst({ where: { uid, start: corrected } });
+              const exists = await prisma.calendarEvent.findFirst({ where: { uid, start: occStart } });
               if (exists) {
                 console.log(`    ⊘ Instance already exists, skipping`);
                 continue;
               }
               const created = await prisma.calendarEvent.create({
-                data: { summary, location, start: corrected, end: occEnd, allDay, uid }
+                data: { summary, location, start: occStart, end: occEnd, allDay, uid }
               });
               importedEvents.push(created);
               console.log(`    ✓ Instance created successfully`);
