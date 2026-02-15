@@ -9,6 +9,12 @@
 			"isBackground": true,
 			"problemMatcher": [],
 			"group": "build"
+		},
+		{
+			"label": "Rebuild frontend after icon update",
+			"type": "shell",
+			"command": "docker compose build frontend",
+			"group": "build"
 		}
 	]
 }

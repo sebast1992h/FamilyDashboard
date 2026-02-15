@@ -1,0 +1,1500 @@
+﻿backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-01-11T13:45:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-01-11T14:00:00.000Z
+backend-1  |     Single event: storing start=2023-01-11T13:45:00.000Z, end=2023-01-11T14:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Termin bei Herr Dr. med. Norbert Rosenthal
+backend-1  |   UID: B283CF5A-1FA2-4F8A-AE46-5E936BBF18F9
+backend-1  |   Raw baseStart from ical-Library: Thu Dec 07 2023 15:50:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2023-12-07T14:50:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2023-12-07T14:50:00.000Z
+backend-1  |     Using manually parsed start for single event: 2023-12-07T14:50:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-12-07T14:50:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-12-07T15:10:00.000Z
+backend-1  |     Single event: storing start=2023-12-07T14:50:00.000Z, end=2023-12-07T15:10:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Gl├╝hwein kaufen
+backend-1  |   UID: D9C205CE-1ADA-4F4E-9FFA-1A78A07AF40B
+backend-1  |   Raw baseStart from ical-Library: Wed Nov 09 2022 16:30:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2022-11-09T15:30:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2022-11-09T15:30:00.000Z
+backend-1  |     Using manually parsed start for single event: 2022-11-09T15:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-11-09T15:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-11-09T16:30:00.000Z
+backend-1  |     Single event: storing start=2022-11-09T15:30:00.000Z, end=2022-11-09T16:30:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Aktivierung Glasfaser
+backend-1  |   UID: 705938AF-5B19-42ED-92C1-D4376B9804E6
+backend-1  |   Raw baseStart from ical-Library: Tue Feb 18 2025 00:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2025-02-17T23:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-02-17T23:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-02-18T23:00:00.000Z
+backend-1  |     Single event: storing start=2025-02-17T23:00:00.000Z, end=2025-02-18T23:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Oma und Opa zu Besuch
+backend-1  |   UID: 5D896503-CFB5-4655-9BC4-3FF7105BFAD4
+backend-1  |   Raw baseStart from ical-Library: Sat Feb 01 2025 00:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2025-01-31T23:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-01-31T23:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-02-02T23:00:00.000Z
+backend-1  |     Single event: storing start=2025-01-31T23:00:00.000Z, end=2025-02-02T23:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Flohmarkt 
+backend-1  |   UID: CD5725DC-CC84-482C-AD72-5AD9E91A5CC9
+backend-1  |   Raw baseStart from ical-Library: Sat Mar 01 2025 10:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2025-03-01T09:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-03-01T09:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-03-01T09:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-03-01T09:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-03-01T13:00:00.000Z
+backend-1  |     Single event: storing start=2025-03-01T09:00:00.000Z, end=2025-03-01T13:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Marzipan holen
+backend-1  |   UID: BC9A17BD-B46E-49A1-B51C-A65BE6E93DDE
+backend-1  |   Raw baseStart from ical-Library: Thu Dec 05 2024 10:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2024-12-05T09:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2024-12-05T09:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2024-12-05T09:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-12-05T09:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-12-05T10:00:00.000Z
+backend-1  |     Single event: storing start=2024-12-05T09:00:00.000Z, end=2024-12-05T10:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Sauerteig Tag 4
+backend-1  |   UID: F8CD47A4-1426-45CB-A832-28896D32CB39
+backend-1  |   Raw baseStart from ical-Library: Mon Mar 03 2025 20:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2025-03-03T19:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-03-03T19:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-03-03T19:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-03-03T19:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-03-03T19:15:00.000Z
+backend-1  |     Single event: storing start=2025-03-03T19:00:00.000Z, end=2025-03-03T19:15:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Besuch Ronja und Sven
+backend-1  |   UID: 2AFC1D7A-7569-4DF2-B4F5-262566B6342F
+backend-1  |   Raw baseStart from ical-Library: Sat May 10 2025 10:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2025-05-10T08:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-05-10T08:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-05-10T08:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-05-10T08:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-05-10T16:00:00.000Z
+backend-1  |     Single event: storing start=2025-05-10T08:00:00.000Z, end=2025-05-10T16:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Essen Caos 
+backend-1  |   UID: 5AB6FB6E-D365-4AED-9F4B-D593EDFD1AC3
+backend-1  |   Raw baseStart from ical-Library: Sun Oct 02 2022 18:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2022-10-02T16:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2022-10-02T16:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2022-10-02T16:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-10-02T16:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-10-02T17:00:00.000Z
+backend-1  |     Single event: storing start=2022-10-02T16:00:00.000Z, end=2022-10-02T17:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Reload Festival 
+backend-1  |   UID: E9FD7B8D-7D6B-4FD7-89B9-0CF508E401BC
+backend-1  |   Raw baseStart from ical-Library: Wed Aug 12 2026 00:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2026-08-11T22:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2026-08-11T22:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2026-08-16T22:00:00.000Z
+backend-1  |     Single event: storing start=2026-08-11T22:00:00.000Z, end=2026-08-16T22:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Essen mit Bergemann
+backend-1  |   UID: 60B30C7A-7D1B-4B9A-9BED-4A31D1CAD195
+backend-1  |   Raw baseStart from ical-Library: Sun Dec 25 2022 14:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2022-12-25T13:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2022-12-25T13:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2022-12-25T13:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-12-25T13:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-12-25T23:00:00.000Z
+backend-1  |     Single event: storing start=2022-12-25T13:00:00.000Z, end=2022-12-25T23:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Nummernflohmarkt 
+backend-1  |   UID: 418EE054-6C7A-41F4-B734-74926BAB5943
+backend-1  |   Raw baseStart from ical-Library: Sat May 03 2025 14:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2025-05-03T12:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-05-03T12:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-05-03T12:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-05-03T12:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-05-03T14:00:00.000Z
+backend-1  |     Single event: storing start=2025-05-03T12:00:00.000Z, end=2025-05-03T14:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Hof Falkenhusen
+backend-1  |   UID: C9021F4D-86AA-47EB-AC5E-1789883CE206
+backend-1  |   Raw baseStart from ical-Library: Sun May 18 2025 10:30:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2025-05-18T08:30:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-05-18T08:30:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-05-18T08:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-05-18T08:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-05-18T09:30:00.000Z
+backend-1  |     Single event: storing start=2025-05-18T08:30:00.000Z, end=2025-05-18T09:30:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Blocker treffen MLV Kollegen 
+backend-1  |   UID: 5EA6E61B-2D3F-4D5B-9291-3A7A6A340BC2
+backend-1  |   Raw baseStart from ical-Library: Fri Apr 14 2023 17:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2023-04-14T15:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2023-04-14T15:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2023-04-14T15:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-04-14T15:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-04-14T21:00:00.000Z
+backend-1  |     Single event: storing start=2023-04-14T15:00:00.000Z, end=2023-04-14T21:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Frauenarzt
+backend-1  |   UID: 498D0F0E-AC45-4C58-B113-5BB8A7F44157
+backend-1  |   Raw baseStart from ical-Library: Fri Jan 20 2023 08:15:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2023-01-20T07:15:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2023-01-20T07:15:00.000Z
+backend-1  |     Using manually parsed start for single event: 2023-01-20T07:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-01-20T07:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-01-20T08:15:00.000Z
+backend-1  |     Single event: storing start=2023-01-20T07:15:00.000Z, end=2023-01-20T08:15:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Reisetasche Abholung 
+backend-1  |   UID: 2D88B126-6674-4B1F-8AAC-5FE441C26870
+backend-1  |   Raw baseStart from ical-Library: Thu Oct 17 2024 09:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2024-10-17T07:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2024-10-17T07:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2024-10-17T07:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-10-17T07:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-10-17T08:00:00.000Z
+backend-1  |     Single event: storing start=2024-10-17T07:00:00.000Z, end=2024-10-17T08:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Lieferung von Picnic
+backend-1  |   UID: 8109BB63-9584-4A03-8565-E3C6464B5A90
+backend-1  |   Raw baseStart from ical-Library: Mon Mar 04 2024 19:40:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2024-03-04T18:40:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2024-03-04T18:40:00.000Z
+backend-1  |     Using manually parsed start for single event: 2024-03-04T18:40:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-03-04T18:40:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-03-04T19:40:00.000Z
+backend-1  |     Single event: storing start=2024-03-04T18:40:00.000Z, end=2024-03-04T19:40:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Katzen f├╝ttern bei Ylvie
+backend-1  |   UID: FC9EB327-48C0-4675-9AA3-91E6E7E80712
+backend-1  |   Raw baseStart from ical-Library: Tue Sep 09 2025 08:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2025-09-09T06:00:00.000Z
+backend-1  |   Has TZID (from UID map): true
+backend-1  |   Has RRULE: true
+backend-1  |   RRULE: {"freq":3,"until":"2025-09-11T21:59:59.000Z","interval":2,"dtstart":"2025-09-09T06:00:00.000Z","wkst":0,"count":null,"tzid":null,"bysetpos":null,"bymonth":null,"bymonthday":[],"bynmonthday":[],"byyearday":null,"byweekno":null,"byweekday":null,"bynweekday":null,"byhour":[6],"byminute":[0],"bysecond":[0],"byeaster":null}
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Karte: HURRICANE FESTIVAL 2022 - Trailer Park in SCHEESSEL
+backend-1  |   UID: ACE5DD0B-EF0D-4CE1-AD12-2FACA5D61E57
+backend-1  |   Raw baseStart from ical-Library: Thu Jun 16 2022 00:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2022-06-15T22:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-06-15T22:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-06-20T22:00:00.000Z
+backend-1  |     Single event: storing start=2022-06-15T22:00:00.000Z, end=2022-06-20T22:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Liebe, Wut und Milchz├ñhne
+backend-1  |   UID: B5817081-3F0E-45D0-8426-19DC37371C4D
+backend-1  |   Raw baseStart from ical-Library: Thu Nov 14 2024 16:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2024-11-14T15:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2024-11-14T15:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2024-11-14T15:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-11-14T15:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-11-14T17:00:00.000Z
+backend-1  |     Single event: storing start=2024-11-14T15:00:00.000Z, end=2024-11-14T17:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Reifenwechsel Tesla
+backend-1  |   UID: AB531731-A9D1-437B-A674-347BEEE7DD32
+backend-1  |   Raw baseStart from ical-Library: Tue Dec 03 2024 16:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2024-12-03T15:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2024-12-03T15:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2024-12-03T15:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-12-03T15:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-12-03T17:00:00.000Z
+backend-1  |     Single event: storing start=2024-12-03T15:00:00.000Z, end=2024-12-03T17:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Geschenk Frau Merchel organisieren
+backend-1  |   UID: B84FD579-4403-4783-B612-B77F1F43721A
+backend-1  |   Raw baseStart from ical-Library: Sat May 03 2025 00:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2025-05-02T22:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: true
+backend-1  |   RRULE: {"freq":0,"dtstart":"2025-05-02T22:00:00.000Z","interval":1,"wkst":0,"count":null,"until":null,"tzid":null,"bysetpos":null,"bymonth":[5],"bymonthday":[2],"bynmonthday":[],"byyearday":null,"byweekno":null,"byweekday":null,"bynweekday":null,"byhour":[22],"byminute":[0],"bysecond":[0],"byeaster":null}
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2026-05-02T22:00:00.000Z
+backend-1  |     Recurring instance: storing start=2026-05-02T22:00:00.000Z
+backend-1  |     Ô£ô Instance created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Termin bei Herr Dr. med. Marc Oliver Bodendorf
+backend-1  |   UID: 67CF3A55-7E22-4C45-BA09-4F8AD96C4A0B
+backend-1  |   Raw baseStart from ical-Library: Thu Apr 03 2025 15:40:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2025-04-03T13:40:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-04-03T13:40:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-04-03T13:40:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-04-03T13:40:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-04-03T13:50:00.000Z
+backend-1  |     Single event: storing start=2025-04-03T13:40:00.000Z, end=2025-04-03T13:50:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Meningokokken Impfung 
+backend-1  |   UID: C5C7CD80-52BE-472C-8D37-9534A6EDA55C
+backend-1  |   Raw baseStart from ical-Library: Tue Apr 23 2024 08:15:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2024-04-23T06:15:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2024-04-23T06:15:00.000Z
+backend-1  |     Using manually parsed start for single event: 2024-04-23T06:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-04-23T06:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-04-23T16:15:00.000Z
+backend-1  |     Single event: storing start=2024-04-23T06:15:00.000Z, end=2024-04-23T16:15:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: SUPERKUNSTFESTIVAL 2025
+backend-1  |   UID: 250E820A-3EF0-4688-B71A-B3557B9F2EF1
+backend-1  |   Raw baseStart from ical-Library: Fri Jun 13 2025 00:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2025-06-12T22:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-06-12T22:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-06-15T22:00:00.000Z
+backend-1  |     Single event: storing start=2025-06-12T22:00:00.000Z, end=2025-06-15T22:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Mawiba -Tanz mit Beckenbodentraining f├╝r alle Frauen
+backend-1  |   UID: A7DF062F-AB76-4ED4-B470-086F43EFAF8A
+backend-1  |   Raw baseStart from ical-Library: Wed May 22 2024 13:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2024-05-22T11:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2024-05-22T11:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2024-05-22T11:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-05-22T11:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-05-22T12:00:00.000Z
+backend-1  |     Single event: storing start=2024-05-22T11:00:00.000Z, end=2024-05-22T12:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Hanna: Eltern Kind turnen
+backend-1  |   UID: EA419BFC-B8C9-4ABF-A909-7D51A90DEFEB
+backend-1  |   Raw baseStart from ical-Library: Thu Jan 15 2026 15:30:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2026-01-15T14:30:00.000Z
+backend-1  |   Has TZID (from UID map): true
+backend-1  |   Has RRULE: true
+backend-1  |   RRULE: {"freq":2,"dtstart":"2026-01-15T14:30:00.000Z","interval":1,"wkst":0,"count":null,"until":null,"tzid":null,"bysetpos":null,"bymonth":null,"bymonthday":[],"bynmonthday":[],"byyearday":null,"byweekno":null,"byweekday":[3],"bynweekday":null,"byhour":[14],"byminute":[30],"bysecond":[0],"byeaster":null}
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2026-01-29T14:30:00.000Z -> 2026-01-29T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-01-29T13:30:00.000Z
+backend-1  |     Ô£ô Instance created successfully
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2026-02-05T14:30:00.000Z -> 2026-02-05T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-02-05T13:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2026-02-12T14:30:00.000Z -> 2026-02-12T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-02-12T13:30:00.000Z
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2026-02-19T14:30:00.000Z -> 2026-02-19T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-02-19T13:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2026-02-26T14:30:00.000Z -> 2026-02-26T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-02-26T13:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-03-05T14:30:00.000Z -> 2026-03-05T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     Recurring instance: storing start=2026-03-05T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-03-12T14:30:00.000Z -> 2026-03-12T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-03-12T12:30:00.000Z
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-03-19T14:30:00.000Z -> 2026-03-19T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-03-19T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-03-26T14:30:00.000Z -> 2026-03-26T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-03-26T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-04-02T14:30:00.000Z -> 2026-04-02T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-04-02T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-04-09T14:30:00.000Z -> 2026-04-09T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-04-09T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-04-16T14:30:00.000Z -> 2026-04-16T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-04-16T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-04-23T14:30:00.000Z -> 2026-04-23T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-04-23T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-04-30T14:30:00.000Z -> 2026-04-30T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-04-30T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-05-07T14:30:00.000Z -> 2026-05-07T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-05-07T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-05-14T14:30:00.000Z -> 2026-05-14T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-05-14T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-05-21T14:30:00.000Z -> 2026-05-21T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-05-21T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-05-28T14:30:00.000Z -> 2026-05-28T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-05-28T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-06-04T14:30:00.000Z -> 2026-06-04T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-06-04T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-06-11T14:30:00.000Z -> 2026-06-11T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-06-11T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-06-18T14:30:00.000Z -> 2026-06-18T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-06-18T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-06-25T14:30:00.000Z -> 2026-06-25T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-06-25T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-07-02T14:30:00.000Z -> 2026-07-02T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-07-02T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-07-09T14:30:00.000Z -> 2026-07-09T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-07-09T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-07-16T14:30:00.000Z -> 2026-07-16T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-07-16T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-07-23T14:30:00.000Z -> 2026-07-23T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-07-23T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-07-30T14:30:00.000Z -> 2026-07-30T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-07-30T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-08-06T14:30:00.000Z -> 2026-08-06T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-08-06T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-08-13T14:30:00.000Z -> 2026-08-13T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-08-13T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-08-20T14:30:00.000Z -> 2026-08-20T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-08-20T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-08-27T14:30:00.000Z -> 2026-08-27T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-08-27T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-09-03T14:30:00.000Z -> 2026-09-03T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-09-03T12:30:00.000Z
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-09-10T14:30:00.000Z -> 2026-09-10T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-09-10T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-09-17T14:30:00.000Z -> 2026-09-17T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-09-17T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-09-24T14:30:00.000Z -> 2026-09-24T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-09-24T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-10-01T14:30:00.000Z -> 2026-10-01T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-10-01T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-10-08T14:30:00.000Z -> 2026-10-08T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-10-08T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-10-15T14:30:00.000Z -> 2026-10-15T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-10-15T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-10-22T14:30:00.000Z -> 2026-10-22T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-10-22T12:30:00.000Z
+backend-1  |     correctTime: ADJUSTED (isDST=true, -2h), 2026-10-29T14:30:00.000Z -> 2026-10-29T12:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-10-29T12:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2026-11-05T14:30:00.000Z -> 2026-11-05T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-11-05T13:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2026-11-12T14:30:00.000Z -> 2026-11-12T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-11-12T13:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2026-11-19T14:30:00.000Z -> 2026-11-19T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-11-19T13:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2026-11-26T14:30:00.000Z -> 2026-11-26T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-11-26T13:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2026-12-03T14:30:00.000Z -> 2026-12-03T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-12-03T13:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2026-12-10T14:30:00.000Z -> 2026-12-10T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-12-10T13:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2026-12-17T14:30:00.000Z -> 2026-12-17T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-12-17T13:30:00.000Z
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2026-12-24T14:30:00.000Z -> 2026-12-24T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-12-24T13:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2026-12-31T14:30:00.000Z -> 2026-12-31T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2026-12-31T13:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2027-01-07T14:30:00.000Z -> 2027-01-07T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2027-01-07T13:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2027-01-14T14:30:00.000Z -> 2027-01-14T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2027-01-14T13:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |     correctTime: ADJUSTED (isDST=false, -1h), 2027-01-21T14:30:00.000Z -> 2027-01-21T13:30:00.000Z
+backend-1  |     Recurring instance: storing start=2027-01-21T13:30:00.000Z
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |     ERROR creating instance: 
+backend-1  | Invalid `prisma.calendarEvent.create()` invocation:
+backend-1  | 
+backend-1  | 
+backend-1  | Unique constraint failed on the fields: (`uid`)
+backend-1  |   Summary: U3
+backend-1  |   UID: A5B42C1E-B393-41E9-BEF6-E516AE0C64A5
+backend-1  |   Raw baseStart from ical-Library: Wed Nov 01 2023 12:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2023-11-01T11:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2023-11-01T11:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2023-11-01T11:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-11-01T11:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-11-01T12:00:00.000Z
+backend-1  |     Single event: storing start=2023-11-01T11:00:00.000Z, end=2023-11-01T12:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Marzipan holen
+backend-1  |   UID: 5D065116-73F3-4158-8CD5-DF8E792AB745
+backend-1  |   Raw baseStart from ical-Library: Wed Aug 03 2022 16:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2022-08-03T14:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2022-08-03T14:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2022-08-03T14:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-08-03T14:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-08-03T15:00:00.000Z
+backend-1  |     Single event: storing start=2022-08-03T14:00:00.000Z, end=2022-08-03T15:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Onlineschulung Nextcloud
+backend-1  |   UID: 7529BD55-A187-45AA-A9ED-B0490ED08C1F
+backend-1  |   Raw baseStart from ical-Library: Tue Nov 25 2025 20:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2025-11-25T19:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-11-25T19:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-11-25T19:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-11-25T19:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-11-25T20:00:00.000Z
+backend-1  |     Single event: storing start=2025-11-25T19:00:00.000Z, end=2025-11-25T20:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Laufrad abholen
+backend-1  |   UID: D049979C-A99B-4DD8-8BA4-C7A75060D366
+backend-1  |   Raw baseStart from ical-Library: Tue Jun 24 2025 16:30:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2025-06-24T14:30:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-06-24T14:30:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-06-24T14:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-06-24T14:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-06-24T15:30:00.000Z
+backend-1  |     Single event: storing start=2025-06-24T14:30:00.000Z, end=2025-06-24T15:30:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Termin bei Frau Daniela Menke
+backend-1  |   UID: E6037C2D-1B36-4C9D-BEEA-1468151AA79C
+backend-1  |   Raw baseStart from ical-Library: Thu Dec 21 2023 11:15:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2023-12-21T10:15:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2023-12-21T10:15:00.000Z
+backend-1  |     Using manually parsed start for single event: 2023-12-21T10:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-12-21T10:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-12-21T10:25:00.000Z
+backend-1  |     Single event: storing start=2023-12-21T10:15:00.000Z, end=2023-12-21T10:25:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Abel Tierarzt
+backend-1  |   UID: 366B38E5-74A4-47CF-9676-5D5DDCB2913C
+backend-1  |   Raw baseStart from ical-Library: Tue Oct 15 2024 16:30:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2024-10-15T14:30:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2024-10-15T14:30:00.000Z
+backend-1  |     Using manually parsed start for single event: 2024-10-15T14:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-10-15T14:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-10-15T15:30:00.000Z
+backend-1  |     Single event: storing start=2024-10-15T14:30:00.000Z, end=2024-10-15T15:30:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: TA Abel Blutabnahme
+backend-1  |   UID: D19468A4-72E0-4776-88D3-C1F98B84F0AC
+backend-1  |   Raw baseStart from ical-Library: Mon Aug 15 2022 08:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2022-08-15T06:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2022-08-15T06:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2022-08-15T06:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-08-15T06:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-08-15T07:00:00.000Z
+backend-1  |     Single event: storing start=2022-08-15T06:00:00.000Z, end=2022-08-15T07:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Blutabnahme Diana 
+backend-1  |   UID: EF505676-FAE8-4FFB-B223-3E6B02151973
+backend-1  |   Raw baseStart from ical-Library: Mon May 13 2024 15:30:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2024-05-13T13:30:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2024-05-13T13:30:00.000Z
+backend-1  |     Using manually parsed start for single event: 2024-05-13T13:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-05-13T13:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-05-13T14:30:00.000Z
+backend-1  |     Single event: storing start=2024-05-13T13:30:00.000Z, end=2024-05-13T14:30:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Kassler machen
+backend-1  |   UID: 443798C2-3DC4-411A-9410-473171CB86FD
+backend-1  |   Raw baseStart from ical-Library: Sun Dec 21 2025 08:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2025-12-21T07:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-12-21T07:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-12-21T07:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-12-21T07:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-12-21T17:00:00.000Z
+backend-1  |     Single event: storing start=2025-12-21T07:00:00.000Z, end=2025-12-21T17:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Wochenbett D├Ârte
+backend-1  |   UID: 112A4C3C-00DF-4031-B86C-BA8DAEB43B4C
+backend-1  |   Raw baseStart from ical-Library: Tue Nov 25 2025 12:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2025-11-25T11:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-11-25T11:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-11-25T11:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-11-25T11:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-11-25T12:00:00.000Z
+backend-1  |     Single event: storing start=2025-11-25T11:00:00.000Z, end=2025-11-25T12:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: SS Vorsorge 
+backend-1  |   UID: 6452E8EE-2E3F-49A1-854A-118BCF136820
+backend-1  |   Raw baseStart from ical-Library: Fri Sep 26 2025 15:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2025-09-26T13:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-09-26T13:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-09-26T13:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-09-26T13:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-09-26T14:00:00.000Z
+backend-1  |     Single event: storing start=2025-09-26T13:00:00.000Z, end=2025-09-26T14:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Weihnachtsmarkt Sereetz
+backend-1  |   UID: 9C446629-57FC-49DB-B013-6462BFB8F6EA
+backend-1  |   Raw baseStart from ical-Library: Sat Dec 16 2023 15:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2023-12-16T14:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2023-12-16T14:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2023-12-16T14:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-12-16T14:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-12-16T15:00:00.000Z
+backend-1  |     Single event: storing start=2023-12-16T14:00:00.000Z, end=2023-12-16T15:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Gasz├ñhler tausch
+backend-1  |   UID: CA44A8C5-AECE-4E20-A229-56EEF8CDD9A8
+backend-1  |   Raw baseStart from ical-Library: Wed Jan 08 2025 08:30:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2025-01-08T07:30:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-01-08T07:30:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-01-08T07:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-01-08T07:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-01-08T09:30:00.000Z
+backend-1  |     Single event: storing start=2025-01-08T07:30:00.000Z, end=2025-01-08T09:30:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Pikler Kurs
+backend-1  |   UID: 51B7ACF1-857F-461D-9B11-0A58FDBD5A69
+backend-1  |   Raw baseStart from ical-Library: Tue May 28 2024 09:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2024-05-28T07:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2024-05-28T07:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2024-05-28T07:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-05-28T07:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-05-28T08:00:00.000Z
+backend-1  |     Single event: storing start=2024-05-28T07:00:00.000Z, end=2024-05-28T08:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: SS Vorsorge
+backend-1  |   UID: 3CF8BD19-9C8B-4E04-8ECC-EDFAF6C6D6A0
+backend-1  |   Raw baseStart from ical-Library: Mon Nov 17 2025 15:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2025-11-17T14:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-11-17T14:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-11-17T14:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-11-17T14:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-11-17T15:00:00.000Z
+backend-1  |     Single event: storing start=2025-11-17T14:00:00.000Z, end=2025-11-17T15:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Beratung Fahrschule Bad Schwartau
+backend-1  |   UID: 1FCD5C7F-404F-4588-B2D8-2E69D3179465
+backend-1  |   Raw baseStart from ical-Library: Sat Dec 03 2022 10:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2022-12-03T09:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2022-12-03T09:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2022-12-03T09:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-12-03T09:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-12-03T10:00:00.000Z
+backend-1  |     Single event: storing start=2022-12-03T09:00:00.000Z, end=2022-12-03T10:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Estrich mit Birte und J├Ârg
+backend-1  |   UID: 672D0CEE-1507-4403-BEA2-9A8A71A54193
+backend-1  |   Raw baseStart from ical-Library: Fri Jun 09 2023 00:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2023-06-08T22:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-06-08T22:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-06-11T22:00:00.000Z
+backend-1  |     Single event: storing start=2023-06-08T22:00:00.000Z, end=2023-06-11T22:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Futter Abel holen
+backend-1  |   UID: AAAE6902-BE01-44D6-BE2E-51F01358E9CC
+backend-1  |   Raw baseStart from ical-Library: Thu Mar 31 2022 15:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2022-03-31T13:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2022-03-31T13:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2022-03-31T13:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-03-31T13:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-03-31T14:00:00.000Z
+backend-1  |     Single event: storing start=2022-03-31T13:00:00.000Z, end=2022-03-31T14:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: TA Abel
+backend-1  |   UID: 3BC32AB9-8EDA-4D89-A633-B25AE209BBA8
+backend-1  |   Raw baseStart from ical-Library: Wed Aug 02 2023 16:15:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2023-08-02T14:15:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2023-08-02T14:15:00.000Z
+backend-1  |     Using manually parsed start for single event: 2023-08-02T14:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-08-02T14:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-08-02T15:15:00.000Z
+backend-1  |     Single event: storing start=2023-08-02T14:15:00.000Z, end=2023-08-02T15:15:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: SS Vorsorge
+backend-1  |   UID: 389F30F4-E5AD-4295-B433-D940048C1912
+backend-1  |   Raw baseStart from ical-Library: Fri Nov 21 2025 10:15:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2025-11-21T09:15:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-11-21T09:15:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-11-21T09:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-11-21T09:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-11-21T10:15:00.000Z
+backend-1  |     Single event: storing start=2025-11-21T09:15:00.000Z, end=2025-11-21T10:15:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Test
+backend-1  |   UID: B10F0729-22D8-491C-BA2D-0604BF2C9E6B
+backend-1  |   Raw baseStart from ical-Library: Mon Dec 27 2021 20:15:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2021-12-27T19:15:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2021-12-27T19:15:00.000Z
+backend-1  |     Using manually parsed start for single event: 2021-12-27T19:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2021-12-27T19:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2021-12-27T20:15:00.000Z
+backend-1  |     Single event: storing start=2021-12-27T19:15:00.000Z, end=2021-12-27T20:15:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Kinderarzt Zungenb├ñndchen
+backend-1  |   UID: BC9E7DC9-C674-4105-A5AC-B7023EBCBE22
+backend-1  |   Raw baseStart from ical-Library: Mon Nov 24 2025 13:30:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2025-11-24T12:30:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-11-24T12:30:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-11-24T12:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-11-24T12:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-11-24T13:30:00.000Z
+backend-1  |     Single event: storing start=2025-11-24T12:30:00.000Z, end=2025-11-24T13:30:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Pikler bei Carolin Tribian
+backend-1  |   UID: AFA641D6-EE11-485B-9B55-726E9F208FA9
+backend-1  |   Raw baseStart from ical-Library: Tue Jul 02 2024 09:30:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2024-07-02T07:30:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2024-07-02T07:30:00.000Z
+backend-1  |     Using manually parsed start for single event: 2024-07-02T07:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-07-02T07:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-07-02T08:30:00.000Z
+backend-1  |     Single event: storing start=2024-07-02T07:30:00.000Z, end=2024-07-02T08:30:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Sauerkraut probieren 
+backend-1  |   UID: 5F771E84-A5A5-42DC-8032-3B4F5D012FBD
+backend-1  |   Raw baseStart from ical-Library: Sun May 04 2025 11:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2025-05-04T09:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-05-04T09:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-05-04T09:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-05-04T09:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-05-04T10:00:00.000Z
+backend-1  |     Single event: storing start=2025-05-04T09:00:00.000Z, end=2025-05-04T10:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: 30 Jahre Geburtshaus 
+backend-1  |   UID: 58AEA496-EB7B-40A7-B709-D9795606080B
+backend-1  |   Raw baseStart from ical-Library: Sun May 05 2024 00:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2024-05-04T22:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-05-04T22:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-05-05T22:00:00.000Z
+backend-1  |     Single event: storing start=2024-05-04T22:00:00.000Z, end=2024-05-05T22:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Glasfaseranschluss
+backend-1  |   UID: 09F48DC8-2C9C-4E37-A850-FD85711355E5
+backend-1  |   Raw baseStart from ical-Library: Wed Nov 06 2024 08:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2024-11-06T07:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2024-11-06T07:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2024-11-06T07:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-11-06T07:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-11-06T10:00:00.000Z
+backend-1  |     Single event: storing start=2024-11-06T07:00:00.000Z, end=2024-11-06T10:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Impftermin f├╝r Hanna machen 
+backend-1  |   UID: 3C6AD981-5FEF-4EE4-8C8A-B65B635E4DA2
+backend-1  |   Raw baseStart from ical-Library: Mon Oct 28 2024 00:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2024-10-27T23:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-10-27T23:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-10-28T23:00:00.000Z
+backend-1  |     Single event: storing start=2024-10-27T23:00:00.000Z, end=2024-10-28T23:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Abel Tierarzt
+backend-1  |   UID: DD3F7FD2-8246-4C6E-A62F-A1FA766027C4
+backend-1  |   Raw baseStart from ical-Library: Thu Aug 21 2025 14:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2025-08-21T12:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-08-21T12:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-08-21T12:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-08-21T12:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-08-21T12:30:00.000Z
+backend-1  |     Single event: storing start=2025-08-21T12:00:00.000Z, end=2025-08-21T12:30:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Test
+backend-1  |   UID: 96D7467E-B781-43B6-A8D9-03685E7137C2
+backend-1  |   Raw baseStart from ical-Library: Wed Apr 06 2022 15:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2022-04-06T13:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2022-04-06T13:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2022-04-06T13:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-04-06T13:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-04-06T14:00:00.000Z
+backend-1  |     Single event: storing start=2022-04-06T13:00:00.000Z, end=2022-04-06T14:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Oma und Opa zu Besuch
+backend-1  |   UID: 10476FEB-E0CA-49ED-8285-EC83C0D945B2
+backend-1  |   Raw baseStart from ical-Library: Fri Feb 13 2026 00:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2026-02-12T23:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2026-02-12T23:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2026-02-15T23:00:00.000Z
+backend-1  |     Single event: storing start=2026-02-12T23:00:00.000Z, end=2026-02-15T23:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: TA Abel
+backend-1  |   UID: 36C10D9C-AC4B-4418-96EF-40D01364FB86
+backend-1  |   Raw baseStart from ical-Library: Mon Aug 22 2022 09:45:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2022-08-22T07:45:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2022-08-22T07:45:00.000Z
+backend-1  |     Using manually parsed start for single event: 2022-08-22T07:45:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-08-22T07:45:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-08-22T08:45:00.000Z
+backend-1  |     Single event: storing start=2022-08-22T07:45:00.000Z, end=2022-08-22T08:45:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Ô£é Friseurtermin bei KLINCK Dein Friseur
+backend-1  |   UID: booking-20251101-6900a89bb0308@umoki.de
+backend-1  |   Raw baseStart from ical-Library: Sat Nov 01 2025 13:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2025-11-01T12:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-11-01T12:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-11-01T12:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-11-01T12:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-11-01T12:20:00.000Z
+backend-1  |     Single event: storing start=2025-11-01T12:00:00.000Z, end=2025-11-01T12:20:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Konzert Jack Pott
+backend-1  |   UID: 4721F71F-E6BE-423C-9761-307D6EA00B2B
+backend-1  |   Raw baseStart from ical-Library: Fri Dec 16 2022 20:00:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2022-12-16T19:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2022-12-16T19:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2022-12-16T19:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-12-16T19:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-12-16T20:00:00.000Z
+backend-1  |     Single event: storing start=2022-12-16T19:00:00.000Z, end=2022-12-16T20:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Elternabend Kita
+backend-1  |   UID: 4D35C849-4584-41A3-BD8B-80362C9E0B1E
+backend-1  |   Raw baseStart from ical-Library: Thu May 22 2025 17:30:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2025-05-22T15:30:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-05-22T15:30:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-05-22T15:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-05-22T15:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-05-22T17:30:00.000Z
+backend-1  |     Single event: storing start=2025-05-22T15:30:00.000Z, end=2025-05-22T17:30:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Zahnarzt 
+backend-1  |   UID: 6CF2D3F6-4648-4924-B758-5A3995FEF859
+backend-1  |   Raw baseStart from ical-Library: Fri Apr 21 2023 10:15:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2023-04-21T08:15:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2023-04-21T08:15:00.000Z
+backend-1  |     Using manually parsed start for single event: 2023-04-21T08:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-04-21T08:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-04-21T10:15:00.000Z
+backend-1  |     Single event: storing start=2023-04-21T08:15:00.000Z, end=2023-04-21T10:15:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Wahl der Kreiselternvertretung Ostholstein
+backend-1  |   UID: 3D9BB57A-0990-4E2D-B8FA-6E0B2D13BC5E
+backend-1  |   Raw baseStart from ical-Library: Wed Oct 22 2025 19:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2025-10-22T17:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2025-10-22T17:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2025-10-22T17:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-10-22T17:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2025-10-22T18:00:00.000Z
+backend-1  |     Single event: storing start=2025-10-22T17:00:00.000Z, end=2025-10-22T18:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: AB 33016, Restarbeiten (Scheibe im Seitenteil drehen und eine neue Glasleiste)
+backend-1  |   UID: F2B05DCB-74E8-4956-B120-58BC7911C77F
+backend-1  |   Raw baseStart from ical-Library: Wed Jul 27 2022 10:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2022-07-27T08:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2022-07-27T08:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2022-07-27T08:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-07-27T08:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-07-27T10:00:00.000Z
+backend-1  |     Single event: storing start=2022-07-27T08:00:00.000Z, end=2022-07-27T10:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Gefrierschrank abholen 
+backend-1  |   UID: 986375E8-75B1-4B07-A280-F69F116599CA
+backend-1  |   Raw baseStart from ical-Library: Mon Feb 20 2023 18:45:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2023-02-20T17:45:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2023-02-20T17:45:00.000Z
+backend-1  |     Using manually parsed start for single event: 2023-02-20T17:45:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-02-20T17:45:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-02-20T18:45:00.000Z
+backend-1  |     Single event: storing start=2023-02-20T17:45:00.000Z, end=2023-02-20T18:45:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: KREATIVE ZEIT MIT DEN KLEINSTEN
+backend-1  |   UID: 71912B1E-4176-4A4A-B9C0-4B3F71603447
+backend-1  |   Raw baseStart from ical-Library: Fri Jan 10 2025 09:30:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2025-01-10T08:30:00.000Z
+backend-1  |   Has TZID (from UID map): true
+backend-1  |   Has RRULE: true
+backend-1  |   RRULE: {"freq":2,"until":"2025-04-04T07:30:00.000Z","interval":2,"dtstart":"2025-01-10T08:30:00.000Z","wkst":0,"count":null,"tzid":null,"bysetpos":null,"bymonth":null,"bymonthday":[],"bynmonthday":[],"byyearday":null,"byweekno":null,"byweekday":[4],"bynweekday":null,"byhour":[8],"byminute":[30],"bysecond":[0],"byeaster":null}
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: TA Abel
+backend-1  |   UID: 34E68773-1A45-4287-A953-CF278ED21F33
+backend-1  |   Raw baseStart from ical-Library: Mon Sep 05 2022 16:15:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2022-09-05T14:15:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2022-09-05T14:15:00.000Z
+backend-1  |     Using manually parsed start for single event: 2022-09-05T14:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-09-05T14:15:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-09-05T15:15:00.000Z
+backend-1  |     Single event: storing start=2022-09-05T14:15:00.000Z, end=2022-09-05T15:15:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Prime k├╝ndigen 
+backend-1  |   UID: 1ACEC802-4219-48D3-8468-7EBB677E6417
+backend-1  |   Raw baseStart from ical-Library: Sun Jul 23 2023 14:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2023-07-23T12:00:00.000Z
+backend-1  |   Has TZID (from UID map): true
+backend-1  |   Has RRULE: true
+backend-1  |   RRULE: {"freq":3,"until":"2023-07-23T12:00:00.000Z","dtstart":"2023-07-23T12:00:00.000Z","interval":1,"wkst":0,"count":null,"tzid":null,"bysetpos":null,"bymonth":null,"bymonthday":[],"bynmonthday":[],"byyearday":null,"byweekno":null,"byweekday":null,"bynweekday":null,"byhour":[12],"byminute":[0],"bysecond":[0],"byeaster":null}
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Babymassage
+backend-1  |   UID: BB370B76-08CB-4D14-9E8D-A92D37271A1B
+backend-1  |   Raw baseStart from ical-Library: Sat Nov 25 2023 11:45:00 GMT+0100 (Central European Standard Time)
+backend-1  |   baseStart as ISO: 2023-11-25T10:45:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2023-11-25T10:45:00.000Z
+backend-1  |     Using manually parsed start for single event: 2023-11-25T10:45:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-11-25T10:45:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2023-11-25T12:00:00.000Z
+backend-1  |     Single event: storing start=2023-11-25T10:45:00.000Z, end=2023-11-25T12:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Schornsteinfeger
+backend-1  |   UID: CF152C0A-B549-4310-AF8A-F091E79C8AD4
+backend-1  |   Raw baseStart from ical-Library: Mon Oct 10 2022 07:30:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2022-10-10T05:30:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2022-10-10T05:30:00.000Z
+backend-1  |     Using manually parsed start for single event: 2022-10-10T05:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-10-10T05:30:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2022-10-10T08:00:00.000Z
+backend-1  |     Single event: storing start=2022-10-10T05:30:00.000Z, end=2022-10-10T08:00:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | 
+backend-1  | === EVENT PROCESSING DEBUG ===
+backend-1  |   Summary: Team schei├ƒe Bremen 
+backend-1  |   UID: D4D59FC2-6E75-4372-BA08-F62937FBC1C3
+backend-1  |   Raw baseStart from ical-Library: Sat May 04 2024 06:00:00 GMT+0200 (Central European Summer Time)
+backend-1  |   baseStart as ISO: 2024-05-04T04:00:00.000Z
+backend-1  |   Has TZID (from UID map): false
+backend-1  |   Has RRULE: false
+backend-1  |   Manually parsed rawDTStart: 2024-05-04T04:00:00.000Z
+backend-1  |     Using manually parsed start for single event: 2024-05-04T04:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-05-04T04:00:00.000Z
+backend-1  |     correctTime: NO ADJUSTMENT (hasTZID=false), returning: 2024-05-04T21:55:00.000Z
+backend-1  |     Single event: storing start=2024-05-04T04:00:00.000Z, end=2024-05-04T21:55:00.000Z
+backend-1  |     Ô£ô Event created successfully
+backend-1  | === END EVENT DEBUG ===
+backend-1  | 
+backend-1  | Imported 481 events
+backend-1  | 
+backend-1  | --- CHECKING FOR DELETED EVENTS ---
+backend-1  |   Ô£ù Deleted event: Bananen Geister machen (UID: x-apple-reminderkit://REMCDReminder/C36E9CAC-6195-489A-BFF5-A622F6DD9578)
+backend-1  |   Ô£ù Deleted event: Wochenbett D├Ârte (UID: x-apple-reminderkit://REMCDReminder/A73FD985-9C85-43CA-B678-945FDB650360)
+backend-1  | Deleted 2 events that are no longer in iCal
+backend-1  | ========== iCal IMPORT/SYNC FINISHED ==========
+backend-1  | 
+backend-1  | GET /api/config - Fetching config data
+backend-1  | GET /api/config - Found 9 config entries
+backend-1  | GET /api/config - Returning config: {
+backend-1  |   "mealVisibility": {
+backend-1  |     "Morgens": true,
+backend-1  |     "Mittags": true,
+backend-1  |     "Abends": true
+backend-1  |   },
+backend-1  |   "birthdayLookaheadDays": 30,
+backend-1  |   "icalUrl": "https://calendar.google.com/calendar/ical/hose3d4o87ktt7f74l4nhen
+backend-1  | GET /api/config - Fetching config data
+backend-1  | GET /api/config - Found 9 config entries
+backend-1  | GET /api/config - Returning config: {
+backend-1  |   "mealVisibility": {
+backend-1  |     "Morgens": true,
+backend-1  |     "Mittags": true,
+backend-1  |     "Abends": true
+backend-1  |   },
+backend-1  |   "birthdayLookaheadDays": 30,
+backend-1  |   "icalUrl": "https://calendar.google.com/calendar/ical/hose3d4o87ktt7f74l4nhen
+backend-1  | GET /api/config - Fetching config data
+backend-1  | GET /api/config - Found 9 config entries
+backend-1  | GET /api/config - Returning config: {
+backend-1  |   "mealVisibility": {
+backend-1  |     "Morgens": true,
+backend-1  |     "Mittags": true,
+backend-1  |     "Abends": true
+backend-1  |   },
+backend-1  |   "birthdayLookaheadDays": 30,
+backend-1  |   "icalUrl": "https://calendar.google.com/calendar/ical/hose3d4o87ktt7f74l4nhen

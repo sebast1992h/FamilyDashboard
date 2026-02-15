@@ -17,6 +17,7 @@
     "express": "^4.19.2",
     "googleapis": "^131.0.0",
     "ical": "^0.8.0",
+    "multer": "^1.4.5-lts.1",
     "node-cron": "^3.0.3",
     "node-fetch": "^2.7.0",
     "prisma": "^6.19.2",

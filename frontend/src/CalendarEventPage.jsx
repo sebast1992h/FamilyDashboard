@@ -1,5 +1,16 @@
 import { useState, useEffect, useMemo } from "react";
+// Hilfsfunktion für Bild-URLs (wie in ConfigPage/DnDIconPlan)
+function getBackendImageUrl(url) {
+  if (!url) return '';
+  if (/^https?:\/\//.test(url)) return url;
+  const backendUrl = window.location.origin.includes(':3000')
+    ? window.location.origin.replace(':3000', ':4000')
+    : (process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000');
+  if (url.startsWith('/uploads/')) return backendUrl + url;
+  return url;
+}
 import { fetchCalendarEvents, saveCalendarEvent, deleteCalendarEvent } from "./api";
+import { normalizeSvgForFont } from "./iconUtils_fixed";
 
 // Helper: lokale YYYY-MM-DD Darstellung ohne UTC-Shift
 function getLocalDateString(date) {
@@ -325,6 +336,7 @@ export default function CalendarEventPage({ onBack }) {
                     date.setDate(monday.getDate() + i);
                     const dateStr = getLocalDateString(date);
                     const todayBg = isToday(date) ? '#78350f' : '#f1f5f9';
+                    // ...existing code...
                     return (
                       <th key={i} className="border p-2 bg-slate-100 min-w-40" style={{ backgroundColor: todayBg }}>
                         <div>{['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'][date.getDay()]}</div>
@@ -373,11 +385,51 @@ export default function CalendarEventPage({ onBack }) {
                               <div className="flex flex-wrap gap-2 mb-2">
                                 {dayActivityIcons[dateStr][memberName].map((iconId) => {
                                   const icon = activityIcons.find(a => a.id === iconId);
-                                  return icon ? (
-                                    <span key={iconId} title={icon.activity} className="text-5xl">
-                                      {icon.icon}
-                                    </span>
-                                  ) : null;
+                                  if (!icon) return null;
+                                  // Prefer iconSvg if present (DB SVG string)
+                                  if (icon.iconSvg && icon.iconSvg.trim().startsWith('<svg')) {
+                                    return (
+                                      <span
+                                        key={iconId}
+                                        title={icon.activity}
+                                        className="text-5xl inline-block align-middle"
+                                        style={{ verticalAlign: 'middle' }}
+                                        dangerouslySetInnerHTML={{ __html: normalizeSvgForFont(icon.iconSvg) }}
+                                      />
+                                    );
+                                  } else if (icon.iconType === 'image' && icon.iconValue) {
+                                    const imageUrl = getBackendImageUrl(icon.iconValue);
+                                    return (
+                                      <img
+                                        key={iconId}
+                                        src={imageUrl}
+                                        alt={icon.activity}
+                                        title={icon.activity}
+                                        className="w-10 h-10 object-contain rounded border border-slate-500 align-middle inline-block"
+                                        style={{ verticalAlign: 'middle' }}
+                                      />
+                                    );
+                                  } else if (icon.iconType === 'icon' && icon.iconValue) {
+                                    // Fallback: render iconValue as SVG string if present
+                                    return (
+                                      <span
+                                        key={iconId}
+                                        title={icon.activity}
+                                        className="text-5xl inline-block align-middle"
+                                        style={{ verticalAlign: 'middle' }}
+                                        dangerouslySetInnerHTML={{ __html: normalizeSvgForFont(icon.iconValue) }}
+                                      />
+                                    );
+                                  } else if (icon.iconType === 'emoji' && icon.icon) {
+                                    return (
+                                      <span key={iconId} title={icon.activity} className="text-5xl align-middle" style={{ verticalAlign: 'middle' }}>
+                                        {icon.icon}
+                                      </span>
+                                    );
+                                  } else {
+                                    // Fallback: show nothing
+                                    return null;
+                                  }
                                 })}
                               </div>
                             )}
@@ -468,14 +520,39 @@ export default function CalendarEventPage({ onBack }) {
                           }
                         });
                       }}
-                      className={`px-3 py-2 rounded text-lg border-2 transition ${
+                      className={`px-3 py-2 rounded text-lg border-2 transition flex items-center justify-center ${
                         isSelected 
                           ? 'bg-green-600 border-green-500' 
                           : 'bg-slate-600 border-slate-500 hover:bg-slate-500'
                       }`}
                       title={activity.activity}
                     >
-                      {activity.icon} {activity.activity}
+                      {/* SVG aus iconSvg bevorzugen */}
+                      {activity.iconSvg && activity.iconSvg.trim().startsWith('<svg') ? (
+                        <span
+                          className="text-2xl inline-block align-middle"
+                          style={{ verticalAlign: 'middle' }}
+                          dangerouslySetInnerHTML={{ __html: normalizeSvgForFont(activity.iconSvg) }}
+                        />
+                      ) : activity.iconType === 'image' && activity.iconValue ? (
+                        <img
+                          src={getBackendImageUrl(activity.iconValue)}
+                          alt={activity.activity}
+                          title={activity.activity}
+                          className="w-6 h-6 object-contain rounded border border-slate-500 align-middle inline-block"
+                          style={{ verticalAlign: 'middle' }}
+                        />
+                      ) : activity.iconType === 'icon' && activity.iconValue ? (
+                        <span
+                          className="text-2xl inline-block align-middle"
+                          style={{ verticalAlign: 'middle' }}
+                          dangerouslySetInnerHTML={{ __html: normalizeSvgForFont(activity.iconValue) }}
+                        />
+                      ) : activity.iconType === 'emoji' && activity.icon ? (
+                        <span className="align-middle text-2xl" style={{ verticalAlign: 'middle' }}>{activity.icon}</span>
+                      ) : (
+                        <span className="align-middle text-2xl" style={{ verticalAlign: 'middle' }}></span>
+                      )}
                     </button>
                   );
                 })}

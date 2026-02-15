@@ -5,12 +5,35 @@ import fetch from "node-fetch";
 import cron from "node-cron";
 import { PrismaClient } from '@prisma/client';
 import { toZonedTime, fromZonedTime } from 'date-fns-tz';
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
+
 
 const app = express();
+const prisma = new PrismaClient();
 app.use(cors());
 app.use(express.json());
 
-const prisma = new PrismaClient();
+// Multer-Upload-Konfiguration für Activity-Icons
+const uploadsDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, uploadsDir),
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname)
+});
+const upload = multer({ storage });
+// Statische Bereitstellung der Uploads
+app.use("/uploads", express.static(uploadsDir));
+
+
 
 // Helper: Configwert aus DB lesen (JSON oder Plain)
 async function getConfigValue(key) {
@@ -323,7 +346,12 @@ app.get('/api/activity-icons', async (req, res) => {
     const icons = await prisma.activityIcon.findMany({
       orderBy: { activity: 'asc' }
     });
-    res.json(icons);
+    // iconSvg als eigenes Feld mitliefern (falls nicht vorhanden, fallback auf iconValue bei iconType==='icon')
+    const iconsWithSvg = icons.map(icon => ({
+      ...icon,
+      iconSvg: icon.iconSvg || (icon.iconType === 'icon' ? icon.iconValue : null)
+    }));
+    res.json(iconsWithSvg);
   } catch (e) {
     console.error("Error fetching activity icons:", e);
     res.status(500).json({ error: e.message });
@@ -332,19 +360,60 @@ app.get('/api/activity-icons', async (req, res) => {
 
 app.post('/api/activity-icons', async (req, res) => {
   try {
-    const { activity, icon } = req.body;
-    if (!activity || !icon) {
-      return res.status(400).json({ error: 'activity and icon are required' });
+    const { activity, icon, iconType, iconValue, iconSvg } = req.body;
+    if (!activity) {
+      return res.status(400).json({ error: 'activity is required' });
     }
-    
+    // Validate based on iconType
+    const type = iconType || 'emoji';
+    if (type === 'emoji' && !icon) {
+      return res.status(400).json({ error: 'icon (emoji) is required for emoji type' });
+    }
+    if (type === 'icon' && !iconValue && !iconSvg) {
+      return res.status(400).json({ error: 'iconValue or iconSvg is required for icon type' });
+    }
+    if (type === 'image' && !iconValue) {
+      return res.status(400).json({ error: 'iconValue (image URL) is required for image type' });
+    }
+    // iconSvg: explizit aus iconSvg, sonst fallback auf iconValue bei iconType==='icon'
+    let svgString = null;
+    if (type === 'icon') {
+      svgString = iconSvg || iconValue || null;
+    }
     const activityIcon = await prisma.activityIcon.upsert({
       where: { activity },
-      update: { icon },
-      create: { activity, icon }
+      update: { 
+        icon: icon || '', 
+        iconType: type, 
+        iconValue: iconValue || null,
+        iconSvg: svgString
+      },
+      create: { 
+        activity, 
+        icon: icon || '', 
+        iconType: type, 
+        iconValue: iconValue || null,
+        iconSvg: svgString
+      }
     });
-    res.json(activityIcon);
+    // iconSvg im Response mitliefern
+    res.json({ ...activityIcon, iconSvg: activityIcon.iconSvg || (activityIcon.iconType === 'icon' ? activityIcon.iconValue : null) });
   } catch (e) {
     console.error("Error creating/updating activity icon:", e);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Image upload endpoint for activity icons
+app.post('/api/upload/icon', upload.single('image'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'Kein Bild hochgeladen' });
+    }
+    const url = `/uploads/${req.file.filename}`;
+    res.json({ url, filename: req.file.filename });
+  } catch (e) {
+    console.error("Error uploading icon:", e);
     res.status(500).json({ error: e.message });
   }
 });

@@ -1,9 +1,19 @@
+SYNTAXFEHLER_TEST_DNDICONPLAN
+// DEBUG: Test-Log um sicherzustellen, dass dieses File wirklich geladen wird
+// eslint-disable-next-line no-console
+console.log('[DnDIconPlan] Datei geladen und ausgeführt');
 import React from "react";
+import { svgIcons } from "./ConfigPage.jsx";
+import { getBackendImageUrl } from "./ConfigPage.jsx";
+import { normalizeSvgForFont } from "./iconUtils_fixed";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 
 // props: icons, plan, family, days, onDrop, onRemove
 export default function DnDIconPlan({ icons, plan, family, days, onDrop, onRemove }) {
+  // DEBUG: Log bei jedem Render
+  // eslint-disable-next-line no-console
+  console.log('[DnDIconPlan] Render mit icons:', icons);
   // plan: [day][person] = [iconIdx, ...]
   function handleDrop(result) {
     if (!result.destination) return;
@@ -24,17 +34,55 @@ export default function DnDIconPlan({ icons, plan, family, days, onDrop, onRemov
             <div ref={provided.innerRef} {...provided.droppableProps} className="flex gap-2 p-2 bg-gray-100 dark:bg-gray-800 rounded">
               {icons.map((item, idx) => (
                 <Draggable key={idx} draggableId={String(idx)} index={idx}>
-                  {(prov) => (
-                    <span
-                      ref={prov.innerRef}
-                      {...prov.draggableProps}
-                      {...prov.dragHandleProps}
-                      className="text-2xl cursor-move select-none border rounded bg-white dark:bg-gray-700 px-2"
-                      title={item.name || "Icon ziehen"}
-                    >
-                      {item.icon}
-                    </span>
-                  )}
+                  {(prov) => {
+                    let iconNode = null;
+                    if (item.iconType === "emoji" || !item.iconType) {
+                      iconNode = <span className="text-2xl">{item.icon}</span>;
+                    } else if (item.iconType === "icon" && item.iconValue) {
+                      // Debug: Log das gesamte Icon-Objekt IMMER
+                      // eslint-disable-next-line no-console
+                      console.log('[DnDIconPlan] Render iconType=icon:', item);
+                      if (item.iconValue.trim().startsWith('<svg')) {
+                        iconNode = <span className="text-2xl inline-block" dangerouslySetInnerHTML={{ __html: normalizeSvgForFont(item.iconValue) }} />;
+                      } else {
+                        const val = item.iconValue.trim().toLowerCase();
+                        let svgIcon = svgIcons.find(s => s.name.trim().toLowerCase() === val);
+                        if (!svgIcon) {
+                          svgIcon = svgIcons.find(s => s.label.trim().toLowerCase() === val);
+                        }
+                        if (svgIcon) {
+                          iconNode = <span className="text-2xl inline-block" dangerouslySetInnerHTML={{ __html: normalizeSvgForFont(svgIcon.svg) }} />;
+                        } else {
+                          // eslint-disable-next-line no-console
+                          console.warn('[DnDIconPlan] Kein SVG gefunden für iconValue:', item.iconValue, 'Verglichen mit:', svgIcons.map(s => ({name: s.name, label: s.label})));
+                          iconNode = <span className="text-2xl">🔲</span>;
+                        }
+                      }
+                    } else if (item.iconType === "image" && item.iconValue) {
+                      const imageUrl = getBackendImageUrl(item.iconValue);
+                      iconNode = (
+                        <img
+                          src={imageUrl}
+                          alt={item.activity}
+                          className="w-12 h-12 object-contain rounded border border-slate-500 align-middle"
+                          style={{ display: 'inline-block', verticalAlign: 'middle' }}
+                        />
+                      );
+                    } else {
+                      iconNode = <span className="text-2xl">❓</span>;
+                    }
+                    return (
+                      <span
+                        ref={prov.innerRef}
+                        {...prov.draggableProps}
+                        {...prov.dragHandleProps}
+                        className="text-2xl cursor-move select-none border rounded bg-white dark:bg-gray-700 px-2"
+                        title={item.name || "Icon ziehen"}
+                      >
+                        {iconNode}
+                      </span>
+                    );
+                  }}
                 </Draggable>
               ))}
               {provided.placeholder}
@@ -61,17 +109,55 @@ export default function DnDIconPlan({ icons, plan, family, days, onDrop, onRemov
                     <Droppable droppableId={`cell-${dIdx}-${mIdx}`} direction="horizontal">
                       {(prov) => (
                         <div ref={prov.innerRef} {...prov.droppableProps} className="flex flex-wrap gap-1 min-h-[32px]">
-                          {plan[dIdx] && plan[dIdx][mIdx] && plan[dIdx][mIdx].map((iconIdx, i) => (
-                            <span
-                              key={i}
-                              className="cursor-pointer border rounded bg-white dark:bg-gray-700 px-1"
-                              title={icons[iconIdx]?.name || "Entfernen"}
-                              onClick={() => onRemove(dIdx, mIdx, i)}
-                              style={{ fontSize: '2em', lineHeight: 1 }}
-                            >
-                              {icons[iconIdx]?.icon}
-                            </span>
-                          ))}
+                          {plan[dIdx] && plan[dIdx][mIdx] && plan[dIdx][mIdx].map((iconIdx, i) => {
+                            const icon = icons[iconIdx];
+                            let iconNode = null;
+                            if (icon?.iconType === "emoji" || !icon?.iconType) {
+                              iconNode = <span className="text-2xl">{icon?.icon}</span>;
+                            } else if (icon?.iconType === "icon" && icon?.iconValue) {
+                              // eslint-disable-next-line no-console
+                              console.log('[DnDIconPlan] Render iconType=icon (table):', icon);
+                              if (icon.iconValue.trim().startsWith('<svg')) {
+                                iconNode = <span className="text-2xl inline-block" dangerouslySetInnerHTML={{ __html: normalizeSvgForFont(icon.iconValue) }} />;
+                              } else {
+                                const val = icon.iconValue.trim().toLowerCase();
+                                let svgIcon = svgIcons.find(s => s.name.trim().toLowerCase() === val);
+                                if (!svgIcon) {
+                                  svgIcon = svgIcons.find(s => s.label.trim().toLowerCase() === val);
+                                }
+                                if (svgIcon) {
+                                  iconNode = <span className="text-2xl inline-block" dangerouslySetInnerHTML={{ __html: normalizeSvgForFont(svgIcon.svg) }} />;
+                                } else {
+                                  // eslint-disable-next-line no-console
+                                  console.warn('[DnDIconPlan] Kein SVG gefunden für iconValue:', icon.iconValue, 'Verglichen mit:', svgIcons.map(s => ({name: s.name, label: s.label})));
+                                  iconNode = <span className="text-2xl">🔲</span>;
+                                }
+                              }
+                            } else if (icon?.iconType === "image" && icon?.iconValue) {
+                              const imageUrl = getBackendImageUrl(icon.iconValue);
+                              iconNode = (
+                                <img
+                                  src={imageUrl}
+                                  alt={icon.activity}
+                                  className="w-12 h-12 object-contain rounded border border-slate-500 align-middle"
+                                  style={{ display: 'inline-block', verticalAlign: 'middle' }}
+                                />
+                              );
+                            } else {
+                              iconNode = <span className="text-2xl">❓</span>;
+                            }
+                            return (
+                              <span
+                                key={i}
+                                className="cursor-pointer border rounded bg-white dark:bg-gray-700 px-1"
+                                title={icon?.name || "Entfernen"}
+                                onClick={() => onRemove(dIdx, mIdx, i)}
+                                style={{ fontSize: '2em', lineHeight: 1 }}
+                              >
+                                {iconNode}
+                              </span>
+                            );
+                          })}
                           {prov.placeholder}
                         </div>
                       )}

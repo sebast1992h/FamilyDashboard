@@ -1,11 +1,43 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { fetchCalendarEvents, saveCalendarEvent, deleteCalendarEvent, fetchMealPlan, saveMealPlan, deleteMealPlan, fetchNotes, saveNote, deleteNote } from "./api";
+import { normalizeSvgForFont } from "./iconUtils_fixed";
 
 // Emoji-Picker für Activity Icons
 const commonEmojis = [
   // Haus & Räume
   "🏠", "🍳", "🛋️", "🛏️", "🚿", "🚽", "🧹", "🧺", "💡", "🪟", "🔑", "🪴",
   "🛁", "🧻", "🔧", "🪜", "🧰", "⚡", "🔌", "🌡️", "🖼️", "📺", "🧼", "🏢",
+  // Tägliche Aufgaben & Haushalt
+  "🛒", // Einkaufen
+  "🧽", // Putzen
+  "🧼", // Waschen
+  "🧺", // Wäsche
+  "🗑️", // Müll
+  "📦", // Paket/Post
+  "🐕", "🐈", // Haustiere
+  "🌱", // Pflanzen
+  "💊", // Medikamente
+  "⏰", // Termin/Wecker
+  "🧯", // Sicherheit
+  "🧴", // Pflege
+  "🧑‍🍳", // Kochen
+  "🥘", // Essen zubereiten
+  "🍽️", // Tisch decken
+  "🧃", // Getränke
+  "🧊", // Kühlschrank
+  "🧂", // Vorräte
+  "🧹", // Staubsaugen
+  "🧺", // Wäschekorb
+  "🧻", // Toilettenpapier
+  "🧼", // Seife
+  "🧽", // Schwamm
+  "🧴", // Reinigungsmittel
+  "🧯", // Feuerlöscher
+  "🧰", // Werkzeug
+  "🔋", // Batterie
+  "🔑", // Schlüssel
+  "📅", // Kalender
+  "📋", // Checkliste
   // Kindergarten & Schule
   "🏫", "🎒", "📚", "📖", "✏️", "🖊️", "✂️", "📝", "📄", "🎓", "👨‍🎓", "👩‍🎓",
   "👨‍🏫", "👩‍🏫", "🧮", "📐", "📏", "🔬", "🧪", "🔭", "🧬", "🎨", "🖌️", "🖍️",
@@ -20,6 +52,71 @@ const commonEmojis = [
   "🚗", "✈️", "🚀", "🚁", "🚂", "🚢", "🚲", "🛴", "🛵", "🏍️", "🚙", "🚕",
   // Natur & Orte
   "🏖️", "🏔️", "🏕️", "🗻", "🌋", "⛰️", "🏜️", "🏝️", "🌊", "⛱️", "🌳", "🌲"
+];
+
+// Lucide-Style SVG Icons für Activity Icons
+export const svgIcons = [
+  { name: "kitchen", label: "Küche", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><rect x="6" y="2" width="12" height="6" rx="1"/><path d="M9 18v-2a2 2 0 1 1 4 0v2"/></svg>' },
+  { name: "bath", label: "Badezimmer", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="8" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><path d="M5 19v2"/><path d="M19 19v2"/></svg>' },
+  { name: "sofa", label: "Wohnzimmer", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="12" width="20" height="7" rx="2"/><path d="M6 12V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5"/><path d="M6 19v2"/><path d="M18 19v2"/></svg>' },
+  { name: "bedroom", label: "Schlafzimmer", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="10" width="20" height="10" rx="2"/><path d="M6 10V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3"/></svg>' },
+  { name: "child", label: "Kinderzimmer", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M2 22v-2a4 4 0 0 1 4-4h12a4 4 0 0 1 4 4v2"/></svg>' },
+  { name: "hallway", label: "Flur", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="8" rx="2"/><path d="M12 8v8"/></svg>' },
+  { name: "garage", label: "Garage", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="8" rx="2"/><path d="M7 19v-4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4"/></svg>' },
+  { name: "garden", label: "Garten", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M2 12h20"/><circle cx="12" cy="12" r="10"/></svg>' },
+  { name: "balcony", label: "Balkon", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="14" width="16" height="6" rx="2"/><path d="M8 14V8a4 4 0 0 1 8 0v6"/></svg>' },
+  { name: "wc", label: "WC", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="7" rx="8" ry="4"/><path d="M4 7v6c0 2.21 3.58 4 8 4s8-1.79 8-4V7"/><path d="M4 13v2c0 2.21 3.58 4 8 4s8-1.79 8-4v-2"/></svg>' },
+  { name: "office", label: "Büro", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><rect x="7" y="2" width="10" height="5" rx="1"/><path d="M9 17v-2a2 2 0 1 1 4 0v2"/></svg>' },
+  { name: "storage", label: "Abstellraum", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg>' },
+  { name: "laundry", label: "Waschküche", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 7V2"/></svg>' },
+  { name: "dining", label: "Esszimmer", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="10" width="20" height="8" rx="2"/><path d="M6 10V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/></svg>' },
+  { name: "guest", label: "Gästezimmer", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="12" width="20" height="8" rx="2"/><path d="M6 12V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5"/></svg>' },
+  { name: "terrace", label: "Terrasse", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="16" width="18" height="5" rx="2"/><path d="M7 16V8a5 5 0 0 1 10 0v8"/></svg>' },
+  { name: "attic", label: "Dachboden", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 12 22 12 12 2"/><rect x="7" y="12" width="10" height="10" rx="2"/></svg>' },
+  { name: "basement", label: "Keller", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="14" width="16" height="6" rx="2"/><path d="M8 14V8a4 4 0 0 1 8 0v6"/></svg>' },
+  { name: "playroom", label: "Spielzimmer", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="10" rx="2"/><circle cx="12" cy="15" r="3"/></svg>' },
+  { name: "workroom", label: "Arbeitszimmer", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="8" rx="2"/><path d="M12 8v8"/></svg>' },
+  { name: "fitness", label: "Fitnessraum", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="12" width="20" height="8" rx="2"/><path d="M6 12V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5"/><circle cx="12" cy="16" r="2"/></svg>' },
+  { name: "sauna", label: "Sauna", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="10" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg>' },
+  { name: "pantry", label: "Vorratsraum", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg>' },
+  { name: "workshop", label: "Werkstatt", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="8" rx="2"/><path d="M7 19v-4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4"/></svg>' },
+  { name: "hobby", label: "Hobbyraum", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg>' },
+  { name: "music-room", label: "Musikzimmer", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="10" rx="2"/><path d="M12 10v10"/><circle cx="12" cy="15" r="3"/></svg>' },
+  { name: "cinema", label: "Heimkino", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="12" width="20" height="8" rx="2"/><path d="M6 12V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5"/></svg>' },
+  { name: "library", label: "Bibliothek", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg>' },
+  { name: "conservatory", label: "Wintergarten", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="8" rx="2"/><path d="M7 19v-4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4"/></svg>' },
+  { name: "pool", label: "Pool", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="17" rx="8" ry="3"/><path d="M4 17v2c0 1.1 3.58 2 8 2s8-.9 8-2v-2"/></svg>' },
+  { name: "carport", label: "Carport", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="8" rx="2"/><path d="M7 19v-4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4"/></svg>' },
+  { name: "bicycle", label: "Fahrradkeller", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>' },
+  { name: "heating", label: "Heizungsraum", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg>' },
+  { name: "tech", label: "Technikraum", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg>' },
+  { name: "utility", label: "Hauswirtschaftsraum", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M12 7V2"/></svg>' },
+  { name: "locker", label: "Umkleide", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="8" rx="2"/><path d="M12 8v8"/></svg>' },
+  { name: "shower", label: "Dusche", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="8" rx="2"/><path d="M7 19v-4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4"/></svg>' },
+  { name: "toilet", label: "Toilette", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="7" rx="8" ry="4"/><path d="M4 7v6c0 2.21 3.58 4 8 4s8-1.79 8-4V7"/><path d="M4 13v2c0 2.21 3.58 4 8 4s8-1.79 8-4v-2"/></svg>' },
+  { name: "pantry2", label: "Speisekammer", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg>' },
+
+  { name: "briefcase", label: "Büro", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>' },
+  { name: "home", label: "Zuhause", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>' },
+  { name: "school", label: "Schule", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>' },
+  { name: "dumbbell", label: "Sport", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></svg>' },
+  { name: "car", label: "Auto", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.5-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>' },
+  { name: "plane", label: "Flugzeug", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>' },
+  { name: "shopping-cart", label: "Einkaufen", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>' },
+  { name: "heart", label: "Arzt", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>' },
+  { name: "music", label: "Musik", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>' },
+  { name: "gamepad-2", label: "Gaming", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/></svg>' },
+  { name: "utensils", label: "Essen", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>' },
+  { name: "bed-sleep", label: "Schlafen", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>' },
+  { name: "baby", label: "Baby", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/></svg>' },
+  { name: "bike", label: "Fahrrad", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>' },
+  { name: "coffee", label: "Kaffee", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></svg>' },
+  { name: "book", label: "Lesen", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>' },
+  { name: "users", label: "Treffen", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>' },
+  { name: "party-popper", label: "Party", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12v0c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11v0c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98v0C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg>' },
+  { name: "stethoscope", label: "Arzt", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>' },
+  { name: "moon", label: "Nacht", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>' },
+  { name: "sun", label: "Tag", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>' },
 ];
 
 
@@ -59,6 +156,11 @@ export default function ConfigPage({ isAuthenticated, onLogin, onBack }) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(null);
   const [newActivity, setNewActivity] = useState("");
   const [newIcon, setNewIcon] = useState("💼");
+  const [newIconType, setNewIconType] = useState("emoji"); // "emoji" | "icon" | "image"
+  const [newIconValue, setNewIconValue] = useState(""); // icon name or image URL
+  const [iconPickerTab, setIconPickerTab] = useState("emoji"); // tab selection for picker
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef(null);
 
   // Weekly Icon Copy Configuration
   const [weeklyIconCopyDay, setWeeklyIconCopyDay] = useState(1); // 0=Sonntag, 1=Montag, etc
@@ -90,6 +192,8 @@ export default function ConfigPage({ isAuthenticated, onLogin, onBack }) {
     "refreshInterval": 15,
     // Zentrale Sichtbarkeit der Mahlzeitentypen
     "mealVisibility": { "Morgens": true, "Mittags": true, "Abends": true },
+    // Kalenderansicht: "week" (Mo-So) oder "rolling" (x-3 bis x+3 Tage)
+    "calendarViewMode": "week",
     // Todos: wie lange erledigte Todos sichtbar bleiben (in Tagen)
     "todoDaysVisible": 10,
     // Geburtstags-Vorschau (Tage in Zukunft für Banner)
@@ -120,7 +224,8 @@ export default function ConfigPage({ isAuthenticated, onLogin, onBack }) {
         setLocalConfig({
           ...data,
           mealVisibility: data.mealVisibility || { "Morgens": true, "Mittags": true, "Abends": true },
-          birthdayLookaheadDays: Number(data.birthdayLookaheadDays ?? defaultData.birthdayLookaheadDays) || defaultData.birthdayLookaheadDays
+          birthdayLookaheadDays: Number(data.birthdayLookaheadDays ?? defaultData.birthdayLookaheadDays) || defaultData.birthdayLookaheadDays,
+          calendarViewMode: data.calendarViewMode || defaultData.calendarViewMode
         });
         setFamily(data.family || []);
         setBirthdays(data.birthdays || []);
@@ -194,37 +299,86 @@ export default function ConfigPage({ isAuthenticated, onLogin, onBack }) {
     }
   }
 
+
   async function loadActivityIcons() {
     try {
       const res = await fetch("/api/activity-icons");
       if (res.ok) {
         const icons = await res.json();
-        setActivityIcons(icons);
+        setActivityIcons(Array.isArray(icons) ? icons : []);
+      } else {
+        setActivityIcons([]);
+        console.warn("Fehler beim Laden der Activity Icons: ", res.status);
       }
     } catch (e) {
-      console.error("Error loading activity icons:", e);
+      setActivityIcons([]);
+      console.error("Fehler beim Laden der Activity Icons:", e);
     }
   }
 
+  // Hilfsfunktion für Bild-URLs (auch für andere Seiten exportieren!)
+  function getBackendImageUrl(url) {
+    if (!url) return '';
+    // Wenn bereits eine absolute URL, gib sie zurück
+    if (/^https?:\/\//.test(url)) return url;
+    // Wenn /uploads/ am Anfang, ergänze Backend-URL
+    const backendUrl = window.location.origin.includes(':3000')
+      ? window.location.origin.replace(':3000', ':4000')
+      : (process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000');
+    if (url.startsWith('/uploads/')) return backendUrl + url;
+    return url;
+  }
+
+  function renderImageIcon(item) {
+    const imageUrl = getBackendImageUrl(item.iconValue);
+    return (
+      <img
+        src={imageUrl}
+        alt={item.activity}
+        className="w-12 h-12 object-contain rounded border border-slate-500 align-middle"
+        style={{ display: 'inline-block', verticalAlign: 'middle' }}
+      />
+    );
+  }
   async function handleAddActivityIcon(e) {
     e.preventDefault();
     if (!newActivity.trim()) {
       alert("Bitte gib eine Tätigkeit ein");
       return;
     }
-
+    let payload = { activity: newActivity.trim(), iconType: newIconType };
+    if (newIconType === "emoji") {
+      payload.icon = newIcon;
+      payload.iconValue = null;
+    } else if (newIconType === "icon") {
+      payload.icon = "";
+      payload.iconValue = newIconValue;
+      // Wenn ein icon name aus der lokalen svgIcons-Liste gewählt wurde,
+      // liefere gleichzeitig das komplette SVG als `iconSvg` mit, damit
+      // das Backend die tatsächliche SVG-Zeichenfolge speichern kann.
+      try {
+        const svgEntry = svgIcons.find(s => s.name === newIconValue || s.label === newIconValue);
+        if (svgEntry && svgEntry.svg) payload.iconSvg = svgEntry.svg;
+      } catch (e) {
+        // silent fallback
+      }
+    } else if (newIconType === "image") {
+      payload.icon = "";
+      payload.iconValue = newIconValue;
+    }
     try {
       const res = await fetch("/api/activity-icons", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ activity: newActivity.trim(), icon: newIcon })
+        body: JSON.stringify(payload)
       });
-
       if (res.ok) {
         const icon = await res.json();
         setActivityIcons([...activityIcons, icon]);
         setNewActivity("");
         setNewIcon("💼");
+        setNewIconType("emoji");
+        setNewIconValue("");
       } else {
         alert("Fehler beim Speichern");
       }
@@ -817,6 +971,39 @@ export default function ConfigPage({ isAuthenticated, onLogin, onBack }) {
           <p className="text-xs text-gray-500 mt-2">Der Dashboard wird diese Werte alle X Sekunden aktualisieren. Mindestwert: 5 Sekunden, Höchstwert: 300 Sekunden.</p>
         </div>
 
+        {/* Kalenderansicht */}
+        <div className="mb-6 card p-4">
+          <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--accent)' }}>📆 Kalenderansicht</h2>
+          <p className="text-sm text-gray-600 mb-3">Umschalten zwischen Wochenansicht (Mo-So) und Tagesfenster (x -3 bis x +3).</p>
+          <div className="flex gap-6 flex-wrap">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="calendarViewMode"
+                value="week"
+                checked={(localConfig?.calendarViewMode || "week") === "week"}
+                onChange={() => {
+                  setLocalConfig(prev => ({ ...prev, calendarViewMode: "week" }));
+                }}
+              />
+              <span className="text-sm">Montag - Sonntag</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="calendarViewMode"
+                value="rolling"
+                checked={(localConfig?.calendarViewMode || "week") === "rolling"}
+                onChange={() => {
+                  setLocalConfig(prev => ({ ...prev, calendarViewMode: "rolling" }));
+                }}
+              />
+              <span className="text-sm">x -3 bis x +3 Tage</span>
+            </label>
+          </div>
+          <p className="text-xs text-gray-500 mt-2">Änderungen werden mit "Alle Änderungen speichern" übernommen.</p>
+        </div>
+
         {/* Familienmitglieder */}
         <div className="mb-6 card p-4">
           <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--accent)' }}>👨‍👩‍👧‍👦 Familienmitglieder</h2>
@@ -1027,14 +1214,101 @@ export default function ConfigPage({ isAuthenticated, onLogin, onBack }) {
 
           {/* Formulär zum Hinzufügen */}
           <form onSubmit={handleAddActivityIcon} className="mb-4 p-3 bg-slate-700 rounded-lg">
-            <div className="flex gap-2 mb-3">
-              <button
-                type="button"
-                onClick={() => setShowEmojiPicker(showEmojiPicker === 'main' ? null : 'main')}
-                className="text-2xl bg-slate-600 hover:bg-slate-500 px-3 py-2 rounded border-2 border-slate-500 min-w-12 h-12 flex items-center justify-center"
-              >
-                {newIcon}
-              </button>
+            <div className="flex gap-2 mb-3 items-end">
+              {/* Tabs for icon type */}
+              <div className="flex flex-col gap-1">
+                <div className="flex gap-1 mb-2">
+                  <button type="button" className={`px-2 py-1 rounded ${iconPickerTab === 'emoji' ? 'bg-slate-600 text-white' : 'bg-slate-500 text-slate-300'}`} onClick={() => { setIconPickerTab('emoji'); setNewIconType('emoji'); }}>Emoji</button>
+                  <button type="button" className={`px-2 py-1 rounded ${iconPickerTab === 'icon' ? 'bg-slate-600 text-white' : 'bg-slate-500 text-slate-300'}`} onClick={() => { setIconPickerTab('icon'); setNewIconType('icon'); }}>Symbol</button>
+                  <button type="button" className={`px-2 py-1 rounded ${iconPickerTab === 'image' ? 'bg-slate-600 text-white' : 'bg-slate-500 text-slate-300'}`} onClick={() => { setIconPickerTab('image'); setNewIconType('image'); }}>Bild</button>
+                </div>
+                {/* Picker for each type */}
+                {iconPickerTab === 'emoji' && (
+                  <button
+                    type="button"
+                    onClick={() => setShowEmojiPicker(showEmojiPicker === 'main' ? null : 'main')}
+                    className="text-2xl bg-slate-600 hover:bg-slate-500 px-3 py-2 rounded border-2 border-slate-500 min-w-12 h-12 flex items-center justify-center"
+                  >
+                    {newIcon}
+                  </button>
+                )}
+                {iconPickerTab === 'icon' && (
+                  <div className="grid grid-cols-6 gap-2 max-h-32 overflow-y-auto bg-slate-600 p-2 rounded">
+                    {svgIcons.map((icon) => (
+                      <button
+                        key={icon.name}
+                        type="button"
+                        title={icon.label}
+                        className={`p-2 rounded ${newIconValue === icon.name ? 'bg-slate-500' : 'hover:bg-slate-500'}`}
+                        onClick={() => setNewIconValue(icon.name)}
+                        dangerouslySetInnerHTML={{ __html: normalizeSvgForFont(icon.svg) }}
+                      />
+                    ))}
+                  </div>
+                )}
+                {iconPickerTab === 'image' && (
+                  <div className="flex flex-col gap-2">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      ref={fileInputRef}
+                      style={{ display: 'none' }}
+                      onChange={async (e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        setUploadingImage(true);
+                        const formData = new FormData();
+                        formData.append('image', file);
+                        try {
+                          const res = await fetch('/api/upload/icon', {
+                            method: 'POST',
+                            body: formData
+                          });
+                          if (res.ok) {
+                            const data = await res.json();
+                            setNewIconValue(data.url);
+                          } else {
+                            alert('Fehler beim Hochladen');
+                          }
+                        } catch (err) {
+                          alert('Fehler beim Hochladen: ' + err.message);
+                        } finally {
+                          setUploadingImage(false);
+                        }
+                      }}
+                    />
+                    <button
+                      type="button"
+                      className="px-3 py-2 bg-slate-600 rounded hover:bg-slate-500 text-white"
+                      onClick={() => fileInputRef.current && fileInputRef.current.click()}
+                      disabled={uploadingImage}
+                    >
+                      {uploadingImage ? 'Lädt...' : (newIconValue ? 'Bild ändern' : 'Bild auswählen')}
+                    </button>
+                    {newIconValue && (
+                      <img src={newIconValue} alt="Icon Vorschau" className="w-12 h-12 object-contain rounded border border-slate-500" />
+                    )}
+                  </div>
+                )}
+                {/* Emoji-Picker */}
+                {showEmojiPicker === 'main' && iconPickerTab === 'emoji' && (
+                  <div className="bg-slate-600 p-3 rounded-lg grid grid-cols-8 gap-2 max-h-48 overflow-y-auto mt-2">
+                    {commonEmojis.map((emoji, idx) => (
+                      <button
+                        key={emoji + '-' + idx}
+                        type="button"
+                        onClick={() => {
+                          setNewIcon(emoji);
+                          setShowEmojiPicker(null);
+                        }}
+                        className="text-2xl hover:bg-slate-500 p-2 rounded cursor-pointer transition-colors"
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
               <input
                 type="text"
                 placeholder="z.B. Büro, Schule, Sport..."
@@ -1049,25 +1323,6 @@ export default function ConfigPage({ isAuthenticated, onLogin, onBack }) {
                 Hinzufügen
               </button>
             </div>
-
-            {/* Emoji-Picker */}
-            {showEmojiPicker === 'main' && (
-              <div className="bg-slate-600 p-3 rounded-lg grid grid-cols-8 gap-2 max-h-48 overflow-y-auto">
-                {commonEmojis.map((emoji) => (
-                  <button
-                    key={emoji}
-                    type="button"
-                    onClick={() => {
-                      setNewIcon(emoji);
-                      setShowEmojiPicker(null);
-                    }}
-                    className="text-2xl hover:bg-slate-500 p-2 rounded cursor-pointer transition-colors"
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
-            )}
           </form>
 
           {/* Liste der Activity Icons */}
@@ -1078,7 +1333,23 @@ export default function ConfigPage({ isAuthenticated, onLogin, onBack }) {
               activityIcons.map((item) => (
                 <div key={item.id} className="flex items-center justify-between bg-slate-700 p-3 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">{item.icon}</span>
+                    {/* Icon je nach Typ anzeigen */}
+                    {item.iconType === "emoji" || !item.iconType ? (
+                      <span className="text-2xl">{item.icon}</span>
+                    ) : item.iconType === "icon" && item.iconValue ? (
+                      (() => {
+                        const svgIcon = svgIcons.find(s => s.name === item.iconValue);
+                        return svgIcon ? (
+                            <span className="text-2xl inline-block" dangerouslySetInnerHTML={{ __html: normalizeSvgForFont(svgIcon.svg) }} />
+                          ) : (
+                            <span className="text-2xl">🔲</span>
+                          );
+                      })()
+                    ) : item.iconType === "image" && item.iconValue ? (
+                      renderImageIcon(item)
+                    ) : (
+                      <span className="text-2xl">❓</span>
+                    )}
                     <span className="font-semibold text-slate-100">{item.activity}</span>
                   </div>
                   <button
@@ -1168,6 +1439,7 @@ export default function ConfigPage({ isAuthenticated, onLogin, onBack }) {
     {/* Modals */}
     {renderBirthdayPopup()}
     {renderMealEditPopup()}
+
     </>
   );
 }

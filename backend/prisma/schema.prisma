@@ -70,7 +70,10 @@ model Config {
 model ActivityIcon {
   id        Int      @id @default(autoincrement())
   activity  String   @unique  // z.B. "Büro", "Sport"
-  icon      String              // Emoji oder Icon, z.B. "💻"
+  icon      String              // Emoji (legacy) oder Icon-Name
+  iconType  String   @default("emoji") // "emoji" | "icon" | "image"
+  iconValue String?             // Icon-Name (z.B. "briefcase") oder Bild-URL
+  iconSvg   String?             // SVG-String für Icon-Typ "icon"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

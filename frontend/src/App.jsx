@@ -10,7 +10,8 @@ import {
   fetchMealPlan,
   fetchCalendarEvents,
 } from "./api";
-import ConfigPage from "./ConfigPage";
+import ConfigPage, { svgIcons } from "./ConfigPage.jsx";
+import { normalizeSvgForFont } from "./iconUtils_fixed";
 import MealPlanPage from "./MealPlanPage";
 import CalendarEventPage from "./CalendarEventPage";
 
@@ -112,6 +113,11 @@ export default function App() {
   const [config, setConfig] = useState(null);
   const [family, setFamily] = useState([]);
   const [weekStart, setWeekStart] = useState(() => getMonday());
+  const [rollingCenter, setRollingCenter] = useState(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  });
   const [toast, setToast] = useState({ visible: false, message: "" });
   const [activityIcons, setActivityIcons] = useState([]);
   const [dayActivityIcons, setDayActivityIcons] = useState({});
@@ -140,6 +146,18 @@ export default function App() {
     "Sonntag",
   ];
   const meals = ["Morgens", "Mittags", "Abends"];
+
+  const calendarViewMode = config?.calendarViewMode || "week";
+  const viewDays = 7;
+  const viewStartDate = (() => {
+    if (calendarViewMode === "rolling") {
+      const d = new Date(rollingCenter);
+      d.setDate(d.getDate() - 3);
+      return d;
+    }
+    return weekStart;
+  })();
+  const viewRangeKey = `${calendarViewMode}:${getLocalDateString(viewStartDate)}`;
   
   // Extract refresh interval from config (in milliseconds)
   const refreshIntervalMs = config && config.refreshInterval ? Math.max(5000, Math.min(300000, config.refreshInterval * 1000)) : 30000;
@@ -201,10 +219,11 @@ export default function App() {
       try {
         const icons = {};
         const familyWithOther = [...family, "Andere"];
-        
-        for (let i = 0; i < 7; i++) {
-          const date = new Date(weekStart);
-          date.setDate(weekStart.getDate() + i);
+        const baseDate = new Date(viewStartDate);
+
+        for (let i = 0; i < viewDays; i++) {
+          const date = new Date(baseDate);
+          date.setDate(baseDate.getDate() + i);
           const dateStr = getLocalDateString(date);
           icons[dateStr] = {};
           
@@ -234,7 +253,7 @@ export default function App() {
     if (family.length > 0) {
       loadWeekDayIcons();
     }
-  }, [weekStart, family]);
+  }, [viewRangeKey, family]);
 
   // Load todos
   useEffect(() => {
@@ -754,49 +773,101 @@ export default function App() {
       {/* Wochenkalender Titel + Wochenwechsel unter dem Banner */}
       <div className="flex items-center justify-start gap-3 mb-4 flex-wrap">
         <h1 className="text-3xl font-bold" style={{ color: "var(--accent)" }}>
-          Wochenkalender
+          {calendarViewMode === "rolling" ? "Rollierende Ansicht" : "Wochenkalender"}
         </h1>
-        <button
-          onClick={() =>
-            setWeekStart((prev) => {
-              const d = new Date(prev);
-              d.setDate(prev.getDate() - 7);
-              return d;
-            })
-          }
-          className="px-3 py-1 rounded bg-slate-700 text-white hover:bg-slate-600"
-          aria-label="Vorherige Woche"
-        >
-          ←
-        </button>
-        <div className="text-sm text-gray-300 min-w-[150px] text-center">
-          {(() => {
-            const start = new Date(weekStart);
-            const end = new Date(weekStart);
-            end.setDate(start.getDate() + 6);
-            const fmt = (d) => d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" });
-            return `${fmt(start)} – ${fmt(end)}`;
-          })()}
-        </div>
-        <button
-          onClick={() => setWeekStart(getMonday())}
-          className="px-3 py-1 rounded bg-amber-700 text-white hover:bg-amber-600"
-        >
-          Heute
-        </button>
-        <button
-          onClick={() =>
-            setWeekStart((prev) => {
-              const d = new Date(prev);
-              d.setDate(prev.getDate() + 7);
-              return d;
-            })
-          }
-          className="px-3 py-1 rounded bg-slate-700 text-white hover:bg-slate-600"
-          aria-label="Nächste Woche"
-        >
-          →
-        </button>
+        {calendarViewMode === "week" ? (
+          <>
+            <button
+              onClick={() =>
+                setWeekStart((prev) => {
+                  const d = new Date(prev);
+                  d.setDate(prev.getDate() - 7);
+                  return d;
+                })
+              }
+              className="px-3 py-1 rounded bg-slate-700 text-white hover:bg-slate-600"
+              aria-label="Vorherige Woche"
+            >
+              ←
+            </button>
+            <div className="text-sm text-gray-300 min-w-[150px] text-center">
+              {(() => {
+                const start = new Date(viewStartDate);
+                const end = new Date(viewStartDate);
+                end.setDate(start.getDate() + viewDays - 1);
+                const fmt = (d) => d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" });
+                return `${fmt(start)} – ${fmt(end)}`;
+              })()}
+            </div>
+            <button
+              onClick={() => setWeekStart(getMonday())}
+              className="px-3 py-1 rounded bg-amber-700 text-white hover:bg-amber-600"
+            >
+              Heute
+            </button>
+            <button
+              onClick={() =>
+                setWeekStart((prev) => {
+                  const d = new Date(prev);
+                  d.setDate(prev.getDate() + 7);
+                  return d;
+                })
+              }
+              className="px-3 py-1 rounded bg-slate-700 text-white hover:bg-slate-600"
+              aria-label="Nächste Woche"
+            >
+              →
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={() =>
+                setRollingCenter((prev) => {
+                  const d = new Date(prev);
+                  d.setDate(prev.getDate() - 1);
+                  return d;
+                })
+              }
+              className="px-3 py-1 rounded bg-slate-700 text-white hover:bg-slate-600"
+              aria-label="Vorheriger Tag"
+            >
+              ←
+            </button>
+            <div className="text-sm text-gray-300 min-w-[150px] text-center">
+              {(() => {
+                const start = new Date(viewStartDate);
+                const end = new Date(viewStartDate);
+                end.setDate(start.getDate() + viewDays - 1);
+                const fmt = (d) => d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" });
+                return `${fmt(start)} – ${fmt(end)}`;
+              })()}
+            </div>
+            <button
+              onClick={() => {
+                const d = new Date();
+                d.setHours(0, 0, 0, 0);
+                setRollingCenter(d);
+              }}
+              className="px-3 py-1 rounded bg-amber-700 text-white hover:bg-amber-600"
+            >
+              Heute
+            </button>
+            <button
+              onClick={() =>
+                setRollingCenter((prev) => {
+                  const d = new Date(prev);
+                  d.setDate(prev.getDate() + 1);
+                  return d;
+                })
+              }
+              className="px-3 py-1 rounded bg-slate-700 text-white hover:bg-slate-600"
+              aria-label="Nächster Tag"
+            >
+              →
+            </button>
+          </>
+        )}
       </div>
 
       {/* Kalender */}
@@ -815,10 +886,10 @@ export default function App() {
                       <th className="border p-2 bg-slate-100" style={{ backgroundColor: "#f1f5f9" }}>
                         Person
                       </th>
-                      {Array.from({ length: 7 }, (_, i) => {
-                        const monday = weekStart;
-                        const date = new Date(monday);
-                        date.setDate(monday.getDate() + i);
+                      {Array.from({ length: viewDays }, (_, i) => {
+                        const baseDate = new Date(viewStartDate);
+                        const date = new Date(baseDate);
+                        date.setDate(baseDate.getDate() + i);
                         const todayBg = isToday(date) ? "#78350f" : "#f1f5f9";
                         return (
                           <th
@@ -844,10 +915,10 @@ export default function App() {
                         >
                           {memberName}
                         </td>
-                        {Array.from({ length: 7 }, (_, dayIndex) => {
-                          const monday = weekStart;
-                          const date = new Date(monday);
-                          date.setDate(monday.getDate() + dayIndex);
+                        {Array.from({ length: viewDays }, (_, dayIndex) => {
+                          const baseDate = new Date(viewStartDate);
+                          const date = new Date(baseDate);
+                          date.setDate(baseDate.getDate() + dayIndex);
                           const dateStr = getLocalDateString(date);
 
                           const dayEvents = classifiedEvents.filter((ev) => {
@@ -888,11 +959,50 @@ export default function App() {
                                   <div className="flex flex-wrap gap-2 mb-2">
                                     {dayActivityIcons[dateStr][memberName].map((iconId) => {
                                       const icon = activityIcons.find(a => a.id === iconId);
-                                      return icon ? (
-                                        <span key={iconId} title={icon.activity} className="text-5xl">
-                                          {icon.icon}
-                                        </span>
-                                      ) : null;
+                                      if (!icon) return null;
+                                      if (icon.iconType === "emoji" || !icon.iconType) {
+                                        return (
+                                          <span key={iconId} title={icon.activity} className="text-5xl">
+                                            {icon.icon}
+                                          </span>
+                                        );
+                                      } else if (icon.iconType === "icon" && icon.iconValue) {
+                                        // SVG icon rendering: bevorzugt iconSvg aus DB, sonst Fallback auf svgIcons-Lookup
+                                        if (icon.iconSvg && icon.iconSvg.trim().startsWith('<svg')) {
+                                          return (
+                                            <span key={iconId} title={icon.activity} className="text-5xl inline-block" dangerouslySetInnerHTML={{ __html: normalizeSvgForFont(icon.iconSvg) }} />
+                                          );
+                                        } else {
+                                          const svgIcon = svgIcons?.find(s => s.name === icon.iconValue);
+                                          return svgIcon ? (
+                                            <span key={iconId} title={icon.activity} className="text-5xl inline-block" dangerouslySetInnerHTML={{ __html: normalizeSvgForFont(svgIcon.svg) }} />
+                                          ) : (
+                                            <span key={iconId} title={icon.activity} className="text-5xl">🔲</span>
+                                          );
+                                        }
+                                      } else if (icon.iconType === "image" && icon.iconValue) {
+                                        // always use backend url for /uploads/
+                                        const backendUrl = window.location.origin.includes(':3000')
+                                          ? window.location.origin.replace(':3000', ':4000')
+                                          : (process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000');
+                                        const imageUrl = icon.iconValue.startsWith('/uploads/')
+                                          ? backendUrl + icon.iconValue
+                                          : icon.iconValue;
+                                        return (
+                                          <img
+                                            key={iconId}
+                                            title={icon.activity}
+                                            src={imageUrl}
+                                            alt={icon.activity}
+                                            className="w-12 h-12 object-contain rounded border border-slate-500 align-middle"
+                                            style={{ display: 'inline-block', verticalAlign: 'middle' }}
+                                          />
+                                        );
+                                      } else {
+                                        return (
+                                          <span key={iconId} title={icon.activity} className="text-5xl">❓</span>
+                                        );
+                                      }
                                     })}
                                   </div>
                                 )}
@@ -969,10 +1079,10 @@ export default function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.from({ length: 7 }, (_, dayIndex) => {
-                    const monday = weekStart;
-                    const date = new Date(monday);
-                    date.setDate(monday.getDate() + dayIndex);
+                  {Array.from({ length: viewDays }, (_, dayIndex) => {
+                    const baseDate = new Date(viewStartDate);
+                    const date = new Date(baseDate);
+                    date.setDate(baseDate.getDate() + dayIndex);
                     const dateStr = getLocalDateString(date);
                     const todayBg = isToday(date) ? "#2d2416" : "#232526";
 
