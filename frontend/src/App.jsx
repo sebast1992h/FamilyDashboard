@@ -14,8 +14,9 @@ import ConfigPage, { svgIcons } from "./ConfigPage.jsx";
 import { normalizeSvgForFont } from "./iconUtils_fixed";
 import MealPlanPage from "./MealPlanPage";
 import CalendarEventPage from "./CalendarEventPage";
+import { getBerlinDateString, formatTime } from "./dateUtils";
 
-// Format date to YYYY-MM-DD in local time
+// Format date to YYYY-MM-DD in local time (für nicht-Event-Datumskeys wie dayActivityIcons)
 function getLocalDateString(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -920,11 +921,11 @@ export default function App() {
                           const date = new Date(baseDate);
                           date.setDate(baseDate.getDate() + dayIndex);
                           const dateStr = getLocalDateString(date);
+                          const berlinDateStr = getBerlinDateString(date);
 
                           const dayEvents = classifiedEvents.filter((ev) => {
                             const evStart = new Date(ev.start);
-                            const evStartStr = getLocalDateString(evStart);
-                            
+
                             // Für mehrtägige Events: prüfe ob der Tag im Zeitraum liegt
                             if (ev.end && ev.allDay) {
                               const evEnd = new Date(ev.end);
@@ -935,13 +936,13 @@ export default function App() {
                               startDate.setHours(0, 0, 0, 0);
                               const endDate = new Date(evEnd);
                               endDate.setHours(0, 0, 0, 0);
-                              
+
                               // Event anzeigen wenn Tag zwischen Start und Ende liegt
                               return checkDate >= startDate && checkDate < endDate && ev.owner === memberName;
                             }
-                            
-                            // Für normale Events: nur am Starttag anzeigen
-                            return evStartStr === dateStr && ev.owner === memberName;
+
+                            // Für normale Events: Starttag in Europe/Berlin ermitteln
+                            return getBerlinDateString(evStart) === berlinDateStr && ev.owner === memberName;
                           });
 
                           return (
@@ -1016,10 +1017,7 @@ export default function App() {
                                     <div className="flex items-center gap-1">
                                       <div className="truncate">
                                         {ev.uid && ev.start && !ev.allDay
-                                          ? `${new Date(ev.start).toLocaleTimeString("de-DE", {
-                                              hour: "2-digit",
-                                              minute: "2-digit",
-                                            })} `
+                                          ? `${formatTime(ev.start)} `
                                           : ""}
                                         {ev.summary.replace(memberName + ":", "").trim()}
                                       </div>

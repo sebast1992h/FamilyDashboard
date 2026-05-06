@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
-import ical from "ical";
+import nodeIcal from "node-ical";
 import fetch from "node-fetch";
 import cron from "node-cron";
 import { PrismaClient } from '@prisma/client';
-import { toZonedTime, fromZonedTime } from 'date-fns-tz';
+// date-fns-tz kept for potential manual-event UTC conversion use
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -482,252 +482,135 @@ app.post('/api/day-activity-icons/:date/:personName', async (req, res) => {
 // ============================================
 
 /**
- * Importiert/Synchronisiert iCal-Events aus einer URL
- * Strategie: 
- * - Update existierende Events (basierend auf UID+start)
- * - Füge neue hinzu
- * - Lösche Events die nicht mehr im iCal sind (nur Events mit UID)
- * - Manuelle Events (ohne UID) bleiben erhalten
+ * Importiert/Synchronisiert iCal-Events aus einer URL.
+ * Nutzt node-ical für korrekte VTIMEZONE/DST-Behandlung.
+ * - Neue Events werden eingefügt (dedup via UID+start)
+ * - Events, die nicht mehr im Feed sind, werden gelöscht
+ * - Manuelle Events (uid=null) bleiben unangetastet
  */
 async function processIcalData(icalUrl) {
   try {
     console.log("\n========== iCal IMPORT/SYNC STARTED ==========");
-    console.log("Fetching iCal from:", icalUrl);
     const response = await fetch(icalUrl);
     if (!response.ok) {
-      return res.status(400).json({ error: 'Failed to fetch iCal URL' });
+      return { success: false, error: `Failed to fetch iCal: ${response.status}` };
     }
-
     const icalData = await response.text();
-    const parsedCal = ical.parseICS(icalData);
 
-    // SCHRITT 1: Erstelle eine Map von UIDs zu DTSTART-Werten UND hasTZID
-    // Sammle gleichzeitig alle UIDs aus dem iCal (für Lösch-Logik)
-    // Workaround für ical-Library Bug: Sie parst Datumsangaben manchmal falsch
-    const uidDTStartMap = new Map(); // UID -> { rawDTStart, hasTZID, originalDateStr, isAllDay }
-    const uidTzidMap = new Map();
-    const uidAllDayMap = new Map(); // UID -> isAllDay
-    const icalUids = new Set(); // Alle UIDs die im iCal vorkommen
-    const eventBlocks = icalData.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/gi) || [];
-    
-    for (const block of eventBlocks) {
-      const uidMatch = block.match(/UID:(.+)/);
-      if (!uidMatch) continue;
-      const uid = uidMatch[1].trim();
-      icalUids.add(uid); // Sammle UID für Lösch-Logik
-      
-      // Prüfe ob All-Day-Event (DTSTART;VALUE=DATE ohne Zeit)
-      const isAllDayEvent = /DTSTART;VALUE=DATE:/m.test(block);
-      
-      // Extrahiere DTSTART direkt aus dem rohen Block
-      // Format kann sein: DTSTART:20260122T150000Z oder DTSTART;TZID=Europe/Berlin:20260122T150000
-      const dtStartMatch = block.match(/DTSTART(?:;VALUE=DATE|;TZID=([^:]+))?:([^\r\n]+)/);
-      let rawDTStart = null;
-      let tzidFromDTStart = dtStartMatch ? dtStartMatch[1] : null;
-      
-      if (dtStartMatch) {
-        const dateStr = dtStartMatch[2].trim();
-        
-        // Prüfe ob TZID oder Z (UTC)
-        const hasDTSTARTwithTZID = /DTSTART;TZID=/m.test(block);
-        const hasDTSTARTwithZ = /DTSTART:[0-9T]+Z/m.test(block);
-        const hasTZID = hasDTSTARTwithTZID && !hasDTSTARTwithZ;
-        
-        // Wenn es UTC ist (Z suffix), parse direkt als UTC
-        if (hasDTSTARTwithZ) {
-          // Format: 20260122T150000Z
-          // Manually parse to avoid ical-Library bugs
-          if (/^\d{8}T\d{6}Z$/.test(dateStr)) {
-            const year = parseInt(dateStr.substring(0, 4), 10);
-            const month = parseInt(dateStr.substring(4, 6), 10);
-            const day = parseInt(dateStr.substring(6, 8), 10);
-            const hours = parseInt(dateStr.substring(9, 11), 10);
-            const minutes = parseInt(dateStr.substring(11, 13), 10);
-            const seconds = parseInt(dateStr.substring(13, 15), 10);
-            rawDTStart = new Date(Date.UTC(year, month - 1, day, hours, minutes, seconds));
-          }
-        }
-        
-        uidDTStartMap.set(uid, { rawDTStart, hasTZID, originalDateStr: dateStr, tzidValue: tzidFromDTStart, isAllDay: isAllDayEvent });
-        uidTzidMap.set(uid, hasTZID);
-        uidAllDayMap.set(uid, isAllDayEvent);
-        
-        // Debug-Log for UTC events
-        const summaryMatch = block.match(/SUMMARY:(.+)/);
-        const summary = summaryMatch ? summaryMatch[1].trim() : 'Unknown';
-        if (!hasTZID) { // Log all UTC-events (no TZID)
-          console.log(`\n=== RAW DTSTART PARSING (UTC Event): ${summary} (UID: ${uid}) ===`);
-          console.log(`  Raw date string: ${dateStr}`);
-          console.log(`  hasTZID: ${hasTZID}`);
-          console.log(`  isAllDay: ${isAllDayEvent}`);
-          console.log(`  Manually parsed rawDTStart: ${rawDTStart ? rawDTStart.toISOString() : 'null'}`);
-          console.log(`  hasDTSTARTwithZ: ${/DTSTART:[0-9T]+Z/m.test(block)}`);
-          console.log('=== END RAW DTSTART PARSING ===\n');
-        }
-      }
+    // node-ical nutzt intern moment-timezone: ev.start ist bereits ein korrekter UTC-Instant.
+    // ev.start.tz enthält den originalen TZID-String (nur für Logging).
+    const parsedCal = nodeIcal.parseICS(icalData);
+
+    // Alle UIDs sammeln (für Lösch-Sync)
+    const icalUids = new Set();
+    for (const k in parsedCal) {
+      const ev = parsedCal[k];
+      if (ev.type === 'VEVENT' && ev.uid) icalUids.add(ev.uid);
     }
+
+    // UTC-Fenster (gilt für Single-Events UND rrule.between(), da node-ical bereits UTC liefert)
+    const now = new Date();
+    const utcWindowStart = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+    const utcWindowEnd   = new Date(Date.UTC(now.getFullYear() + 1, now.getMonth(), now.getDate()));
 
     const importedEvents = [];
-    const now = new Date();
-    const windowStart = new Date(now);
-    windowStart.setHours(0, 0, 0, 0); // Start von heute (Mitternacht)
-    const windowEnd = new Date(now);
-    windowEnd.setFullYear(windowEnd.getFullYear() + 1); // import bis zu 1 Jahr im Voraus
 
-    // SCHRITT 2: Verarbeite alle Event-Instanzen und verwende die uidTzidMap
     for (const k in parsedCal) {
-      if (parsedCal.hasOwnProperty(k)) {
-        const ev = parsedCal[k];
-        if (ev.type !== 'VEVENT') continue;
+      if (!Object.prototype.hasOwnProperty.call(parsedCal, k)) continue;
+      const ev = parsedCal[k];
+      if (ev.type !== 'VEVENT' || !ev.uid) continue;
 
-        const uid = ev.uid;
-        if (!uid) continue;
+      const uid      = ev.uid;
+      const summary  = ev.summary  || 'Untitled';
+      const location = ev.location || null;
+      const allDay   = ev.datetype === 'date';
 
-        const summary = ev.summary || 'Untitled';
-        const location = ev.location || null;
-        const baseStart = ev.start || new Date();
-        const baseEnd = ev.end || null;
-        const durationMs = baseEnd && baseStart ? (new Date(baseEnd).getTime() - new Date(baseStart).getTime()) : 0;
-        
-        // Hole die TZID-Info und All-Day-Info aus der Map (gilt für ALLE Instanzen dieses Events)
-        const hasTZID = uidTzidMap.get(uid) || false;
-        const allDay = uidAllDayMap.get(uid) || false;
-        const dtStartInfo = uidDTStartMap.get(uid);
-        
-        // DEBUG: Detailliertes Logging für alle Events
-        const baseStartISOString = new Date(baseStart).toISOString();
-        console.log(`\n=== EVENT PROCESSING DEBUG ===`);
-        console.log(`  Summary: ${summary}`);
-        console.log(`  UID: ${uid}`);
-        console.log(`  Has RRULE: ${!!ev.rrule}`);
-        if (dtStartInfo && dtStartInfo.rawDTStart) {
-          console.log(`  Manually parsed rawDTStart: ${dtStartInfo.rawDTStart.toISOString()}`);
-        }
+      // ev.start.tz = originaler TZID (nur Logging); node-ical hat bereits korrekt zu UTC konvertiert
+      const tzid = ev.start?.tz || (allDay ? 'allDay' : 'UTC');
 
-        // Wenn es TZID hatte, wurde es von ical-Library zu UTC konvertiert
-        // Wir müssen es zurück zu Berlin-Zeit konvertieren
-        const correctTime = (date) => {
-          if (!date || !hasTZID) {
-            console.log(`    correctTime: NO ADJUSTMENT (hasTZID=${hasTZID}), returning: ${new Date(date).toISOString()}`);
-            return date;
+      const baseStart  = new Date(ev.start);
+      const baseEnd    = ev.end ? new Date(ev.end) : null;
+      const durationMs = baseEnd ? baseEnd.getTime() - baseStart.getTime() : 0;
+
+      console.log(`\n  EVENT: ${summary} | tz: ${tzid} | start: ${baseStart.toISOString()}`);
+
+      if (ev.rrule) {
+        // rrule.between() operiert im gleichen UTC-Koordinatensystem wie ev.start (node-ical korrekt)
+        const occurrences = ev.rrule.between(utcWindowStart, utcWindowEnd, true);
+
+        for (const occ of occurrences) {
+          // EXDATE-Prüfung (ausgeschlossene Termine)
+          if (ev.exdate) {
+            const occDateStr = occ.toISOString().slice(0, 10);
+            const excluded = Object.values(ev.exdate).some(
+              exd => new Date(exd).toISOString().slice(0, 10) === occDateStr
+            );
+            if (excluded) continue;
           }
-          
-          // Das Event war in Berlin-Zeit (TZID=Europe/Berlin)
-          // Die ical-Library hat es NICHT zu UTC konvertiert
-          // stattdessen hat sie einfach die Zeit genommen: 09:45
-          // JavaScript speichert das als 09:45 UTC
-          // Aber wir wollen es als 09:45 Berlin-Zeit in der DB haben
-          // 
-          // 09:45 Berlin (CET, UTC+1) = 08:45 UTC
-          // Also müssen wir MINUS 1h (Winter) oder MINUS 2h (Sommer)
-          // um die echte UTC-Zeit zu bekommen, die dann beim Frontend-Display korrekt wird
-          
-          const d = new Date(date);
-          const month = d.getMonth();
-          
-          // DST: März-Oktober ist CEST (UTC+2), sonst CET (UTC+1)
-          const isDST = month >= 2 && month < 10;
-          const offsetHours = isDST ? 2 : 1;
-          const offsetMs = offsetHours * 3600000;
-          
-          const corrected = new Date(d.getTime() - offsetMs); // MINUS, nicht PLUS!
-          console.log(`    correctTime: ADJUSTED (isDST=${isDST}, -${offsetHours}h), ${d.toISOString()} -> ${corrected.toISOString()}`);
-          return corrected;
-        };
 
-        // Wiederkehrende Termine expandieren
-        if (ev.rrule) {
-          const dates = ev.rrule.between(windowStart, windowEnd, true);
-          for (const occ of dates) {
-            // RRULE liefert bereits korrekte UTC-Zeiten, keine Korrektur nötig
-            let occStart = new Date(occ);
-            if (dtStartInfo && dtStartInfo.rawDTStart && !hasTZID) {
-              // Berechne Offset von der ical-Library-Parse zur manuellen Parse
-              const icalTimestamp = new Date(baseStart).getTime();
-              const manualTimestamp = dtStartInfo.rawDTStart.getTime();
-              const offsetMs = manualTimestamp - icalTimestamp;
-              occStart = new Date(occStart.getTime() + offsetMs);
-              console.log(`    Using manually parsed offset for recurring instance: +${offsetMs}ms`);
-            }
-            
-            // RRULE-Zeiten sind bereits in UTC, KEINE correctTime-Korrektur anwenden!
-            const occEnd = durationMs ? new Date(occStart.getTime() + durationMs) : null;
-            console.log(`    Recurring instance: storing start=${occStart.toISOString()}`);
-            try {
-              // Deduplizieren: gleicher uid + start
-              const exists = await prisma.calendarEvent.findFirst({ where: { uid, start: occStart } });
-              if (exists) {
-                console.log(`    ⊘ Instance already exists, skipping`);
-                continue;
-              }
-              const created = await prisma.calendarEvent.create({
-                data: { summary, location, start: occStart, end: occEnd, allDay, uid }
-              });
-              importedEvents.push(created);
-              console.log(`    ✓ Instance created successfully`);
-            } catch (instErr) {
-              console.error(`    ERROR creating instance: ${instErr.message}`);
+          let occStart    = new Date(occ);
+          let occEnd      = durationMs ? new Date(occStart.getTime() + durationMs) : null;
+          let occSummary  = summary;
+          let occLocation = location;
+
+          // RECURRENCE-ID Overrides (abweichende Instanzen)
+          if (ev.recurrences) {
+            const occDateStr = occ.toISOString().slice(0, 10);
+            const override = Object.values(ev.recurrences).find(
+              r => new Date(r.start).toISOString().slice(0, 10) === occDateStr
+            );
+            if (override) {
+              occStart    = new Date(override.start);
+              occEnd      = override.end ? new Date(override.end) : occEnd;
+              occSummary  = override.summary  || summary;
+              occLocation = override.location || location;
             }
           }
-        } else {
-          // Für Single Events: verwende manuell geparste DTSTART wenn verfügbar
-          let start = baseStart;
-          if (dtStartInfo && dtStartInfo.rawDTStart && !hasTZID) {
-            start = dtStartInfo.rawDTStart;
-            console.log(`    Using manually parsed start for single event: ${start.toISOString()}`);
-          }
-          
-          start = correctTime(start);
-          let end = null;
-          if (baseEnd) {
-            end = correctTime(baseEnd);
-          }
-          console.log(`    Single event: storing start=${start.toISOString()}, end=${end ? end.toISOString() : 'null'}`);
+
           try {
-            const exists = await prisma.calendarEvent.findFirst({ where: { uid, start } });
+            const exists = await prisma.calendarEvent.findFirst({ where: { uid, start: occStart } });
             if (!exists) {
               const created = await prisma.calendarEvent.create({
-                data: { summary, location, start, end, allDay, uid }
+                data: { summary: occSummary, location: occLocation, start: occStart, end: occEnd, allDay, uid }
               });
               importedEvents.push(created);
-              console.log(`    ✓ Event created successfully`);
-            } else {
-              console.log(`    ⊘ Event already exists, skipping`);
             }
-          } catch (eventErr) {
-            console.error(`    ERROR creating event: ${eventErr.message}`);
+          } catch (err) {
+            console.error(`  ERROR (recurring ${occStart.toISOString()}): ${err.message}`);
           }
         }
-        console.log(`=== END EVENT DEBUG ===\n`);
+      } else {
+        // Single Event: nur im Fenster speichern
+        if (baseStart < utcWindowStart || baseStart > utcWindowEnd) continue;
+
+        try {
+          const exists = await prisma.calendarEvent.findFirst({ where: { uid, start: baseStart } });
+          if (!exists) {
+            const created = await prisma.calendarEvent.create({
+              data: { summary, location, start: baseStart, end: baseEnd, allDay, uid }
+            });
+            importedEvents.push(created);
+          }
+        } catch (err) {
+          console.error(`  ERROR (single ${baseStart.toISOString()}): ${err.message}`);
+        }
       }
     }
 
-    console.log("Imported", importedEvents.length, "events");
-
-    // SCHRITT 3: Lösche Events die nicht mehr im iCal sind
-    // Nur Events mit UID (iCal-Events) - manuelle Events (ohne UID) bleiben erhalten
-    console.log("\n--- CHECKING FOR DELETED EVENTS ---");
-    const dbEvents = await prisma.calendarEvent.findMany({
-      where: { 
-        uid: { not: null } // Nur iCal-Events prüfen
-      }
-    });
-
+    // Lösche Events, die nicht mehr im iCal-Feed vorhanden sind
+    const dbEvents = await prisma.calendarEvent.findMany({ where: { uid: { not: null } } });
     let deletedCount = 0;
     for (const dbEvent of dbEvents) {
       if (!icalUids.has(dbEvent.uid)) {
-        // Event existiert in DB aber nicht mehr im iCal -> löschen
         await prisma.calendarEvent.delete({ where: { id: dbEvent.id } });
-        console.log(`  ✗ Deleted event: ${dbEvent.summary} (UID: ${dbEvent.uid})`);
         deletedCount++;
       }
     }
-    console.log(`Deleted ${deletedCount} events that are no longer in iCal`);
 
-    console.log("========== iCal IMPORT/SYNC FINISHED ==========\n");
+    console.log(`========== SYNC DONE: +${importedEvents.length} imported, -${deletedCount} deleted ==========\n`);
     return { success: true, imported: importedEvents.length, deleted: deletedCount };
   } catch (e) {
-    console.error("Error processing iCal:", e);
+    console.error("Error in processIcalData:", e);
     return { success: false, error: e.message };
   }
 }
@@ -977,5 +860,33 @@ function startIcalAutoSyncScheduler() {
 // Starte den Scheduler beim Start des Servers
 startWeeklyIconCopyScheduler();
 startIcalAutoSyncScheduler();
+
+// Einmaliger Cleanup: löscht alte iCal-Events (falsche UTC-Zeiten durch vorherige
+// DST-Heuristik) und triggert sofort einen sauberen Re-Import.
+// Läuft nur beim ersten Start nach dem Update, danach no-op.
+async function runOneTimeIcalTzCleanup() {
+  const flagKey = "icalTzCleanup_v1_done";
+  try {
+    const existing = await prisma.config.findUnique({ where: { key: flagKey } });
+    if (existing) return;
+
+    const deleted = await prisma.calendarEvent.deleteMany({ where: { uid: { not: null } } });
+    console.log(`[ical-tz-cleanup] ${deleted.count} stale iCal events deleted, re-importing...`);
+
+    await prisma.config.create({
+      data: { key: flagKey, value: JSON.stringify({ at: new Date().toISOString(), deleted: deleted.count }) }
+    });
+
+    const icalConfig = await prisma.config.findUnique({ where: { key: 'icalUrl' } });
+    if (icalConfig) {
+      const icalUrl = icalConfig.value.replace(/^"|"$/g, '');
+      await processIcalData(icalUrl);
+    }
+  } catch (e) {
+    console.error("[ical-tz-cleanup] Error:", e.message);
+  }
+}
+
+runOneTimeIcalTzCleanup();
 
 app.listen(4000, () => console.log('Backend läuft auf Port 4000'));

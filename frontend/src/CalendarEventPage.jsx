@@ -11,8 +11,9 @@ function getBackendImageUrl(url) {
 }
 import { fetchCalendarEvents, saveCalendarEvent, deleteCalendarEvent } from "./api";
 import { normalizeSvgForFont } from "./iconUtils_fixed";
+import { getBerlinDateString } from "./dateUtils";
 
-// Helper: lokale YYYY-MM-DD Darstellung ohne UTC-Shift
+// Lokale YYYY-MM-DD für neue Events und UI-interne Datumskeys (nicht für iCal-Event-Zuordnung)
 function getLocalDateString(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -355,11 +356,11 @@ export default function CalendarEventPage({ onBack }) {
                       const date = new Date(monday);
                       date.setDate(monday.getDate() + dayIndex);
                       const dateStr = getLocalDateString(date);
-                      
+                      const berlinDateStr = getBerlinDateString(date);
+
                       const dayEvents = (classifiedEvents || []).filter(ev => {
                         const evStart = new Date(ev.start);
-                        const evStartStr = getLocalDateString(evStart);
-                        
+
                         // Für mehrtägige All-Day-Events: prüfe ob der Tag im Zeitraum liegt
                         if (ev.end && ev.allDay) {
                           const evEnd = new Date(ev.end);
@@ -369,12 +370,12 @@ export default function CalendarEventPage({ onBack }) {
                           startDate.setHours(0, 0, 0, 0);
                           const endDate = new Date(evEnd);
                           endDate.setHours(0, 0, 0, 0);
-                          
+
                           return checkDate >= startDate && checkDate < endDate && ev.owner === memberName;
                         }
-                        
-                        // Für normale Events: nur am Starttag anzeigen
-                        return evStartStr === dateStr && ev.owner === memberName;
+
+                        // Für normale Events: Starttag in Europe/Berlin ermitteln
+                        return getBerlinDateString(evStart) === berlinDateStr && ev.owner === memberName;
                       });
                       
                       return (
