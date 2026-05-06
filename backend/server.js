@@ -4,7 +4,7 @@ import nodeIcal from "node-ical";
 import fetch from "node-fetch";
 import cron from "node-cron";
 import { PrismaClient } from '@prisma/client';
-import { fromZonedTime, toZonedTime } from 'date-fns-tz';
+import { fromZonedTime } from 'date-fns-tz';
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -491,6 +491,20 @@ app.post('/api/day-activity-icons/:date/:personName', async (req, res) => {
 // Wall-Time-Tag (UTC-Komponenten = Wall Time in rrule-Domäne)
 const wallDayKey = (d) => d.toISOString().slice(0, 10);
 
+// rrule@2.8.1 + node-ical liefern für TZID-Events Date-Objekte, deren UTC-Felder
+// die Wall-Time im TZID halten ("wall-time-as-UTC"). Konvertierung in echte UTC-Instants
+// muss über den String-Pfad von fromZonedTime erfolgen — sonst No-op wenn System-TZ === TZID.
+function wallTimeUtcToRealUtc(date, tzid) {
+  if (!tzid) return new Date(date.getTime());
+  const y = date.getUTCFullYear();
+  const M = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const D = String(date.getUTCDate()).padStart(2, '0');
+  const h = String(date.getUTCHours()).padStart(2, '0');
+  const m = String(date.getUTCMinutes()).padStart(2, '0');
+  const s = String(date.getUTCSeconds()).padStart(2, '0');
+  return fromZonedTime(`${y}-${M}-${D}T${h}:${m}:${s}`, tzid);
+}
+
 function isExcludedByExdate(exdate, occ) {
   if (!exdate) return false;
   const key = wallDayKey(occ);
@@ -562,16 +576,12 @@ async function processIcalData(icalUrl) {
       const expectedSet = expectedStartsByUid.get(uid);
 
       if (ev.rrule) {
-        // node-ical baut den rrule-DTSTART als Wall-Time-as-UTC (ical.js:624:
-        //   "rrule requires the time to be local").
-        // Daher: rrule.between() liefert Wall-Time-as-UTC Dates.
-        // Für TZID-Events: fromZonedTime(occ, tzid) → echtes UTC.
-        // Window für between() muss im gleichen Wall-Time-Koordinatensystem sein.
-        const rruleWinStart = isTzAware ? toZonedTime(utcWindowStart, tzid) : utcWindowStart;
-        const rruleWinEnd   = isTzAware ? toZonedTime(utcWindowEnd,   tzid) : utcWindowEnd;
-        // 1-Tag-Puffer auf jeder Seite: DST-Lücken und -Boundary-Dopplungen abfangen
-        const expandedStart = new Date(rruleWinStart.getTime() - dayMs);
-        const expandedEnd   = new Date(rruleWinEnd.getTime()   + dayMs);
+        // rrule.between() erwartet Dates im gleichen Wall-Time-as-UTC-Koordinatensystem
+        // wie der intern gespeicherte DTSTART. UTC-Window direkt übergeben ist ausreichend,
+        // weil die numerischen Werte im richtigen Bereich liegen.
+        // ±1 Tag Puffer: puffert DST-Sprung + Wall-vs-UTC-Offset (max. ±14h).
+        const expandedStart = new Date(utcWindowStart.getTime() - dayMs);
+        const expandedEnd   = new Date(utcWindowEnd.getTime()   + dayMs);
 
         const occurrences = ev.rrule.between(expandedStart, expandedEnd, true);
 
@@ -579,17 +589,17 @@ async function processIcalData(icalUrl) {
           // EXDATE-Match in Wall-Time-Domäne (vor UTC-Konvertierung!)
           if (isExcludedByExdate(ev.exdate, occ)) continue;
 
-          // Wall-Time-Occurrence → echtes UTC
-          const occStartUtc = isTzAware ? fromZonedTime(occ, tzid) : new Date(occ);
+          // Wall-Time-as-UTC → echtes UTC (system-TZ-agnostisch via UTC-Getter + String-Pfad)
+          const occStartUtc = wallTimeUtcToRealUtc(occ, tzid);
 
           // Nachfiltern auf echtes UTC-Fenster (Puffer-Termine herauswerfen)
           if (occStartUtc < utcWindowStart || occStartUtc > utcWindowEnd) continue;
 
-          // Duration in Wall-Time addieren (DST-sicher: 15:30-16:45 bleibt 1h15m unabhängig vom Offset-Wechsel)
+          // Duration in Wall-Time addieren (DST-sicher: Dauer bleibt korrekt über Offset-Wechsel)
           let occEnd = null;
           if (durationMs) {
             if (isTzAware) {
-              occEnd = fromZonedTime(new Date(occ.getTime() + durationMs), tzid);
+              occEnd = wallTimeUtcToRealUtc(new Date(occ.getTime() + durationMs), tzid);
             } else {
               occEnd = new Date(occStartUtc.getTime() + durationMs);
             }
@@ -921,7 +931,7 @@ startIcalAutoSyncScheduler();
 // DST-Heuristik) und triggert sofort einen sauberen Re-Import.
 // Läuft nur beim ersten Start nach dem Update, danach no-op.
 async function runOneTimeIcalTzCleanup() {
-  const flagKey = "icalTzCleanup_v2_done";
+  const flagKey = "icalTzCleanup_v3_done";
   try {
     const existing = await prisma.config.findUnique({ where: { key: flagKey } });
     if (existing) return;
