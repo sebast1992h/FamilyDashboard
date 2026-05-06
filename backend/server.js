@@ -4,7 +4,7 @@ import nodeIcal from "node-ical";
 import fetch from "node-fetch";
 import cron from "node-cron";
 import { PrismaClient } from '@prisma/client';
-// date-fns-tz kept for potential manual-event UTC conversion use
+import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -488,6 +488,25 @@ app.post('/api/day-activity-icons/:date/:personName', async (req, res) => {
  * - Events, die nicht mehr im Feed sind, werden gelöscht
  * - Manuelle Events (uid=null) bleiben unangetastet
  */
+// Wall-Time-Tag (UTC-Komponenten = Wall Time in rrule-Domäne)
+const wallDayKey = (d) => d.toISOString().slice(0, 10);
+
+function isExcludedByExdate(exdate, occ) {
+  if (!exdate) return false;
+  const key = wallDayKey(occ);
+  return Object.values(exdate).some(e => wallDayKey(new Date(e)) === key);
+}
+
+function findRecurrenceOverride(recurrences, occ) {
+  if (!recurrences) return null;
+  const key = wallDayKey(occ);
+  return Object.values(recurrences).find(r => {
+    // recurrenceid = ursprünglicher Termin-Tag (gleiche Wall-Time-Domäne wie occ aus rrule)
+    const ref = r.recurrenceid ? new Date(r.recurrenceid) : new Date(r.start);
+    return wallDayKey(ref) === key;
+  });
+}
+
 async function processIcalData(icalUrl) {
   try {
     console.log("\n========== iCal IMPORT/SYNC STARTED ==========");
@@ -497,23 +516,26 @@ async function processIcalData(icalUrl) {
     }
     const icalData = await response.text();
 
-    // node-ical nutzt intern moment-timezone: ev.start ist bereits ein korrekter UTC-Instant.
-    // ev.start.tz enthält den originalen TZID-String (nur für Logging).
     const parsedCal = nodeIcal.parseICS(icalData);
 
-    // Alle UIDs sammeln (für Lösch-Sync)
+    // Alle UIDs sammeln (für Orphan-Cleanup am Ende)
     const icalUids = new Set();
     for (const k in parsedCal) {
       const ev = parsedCal[k];
       if (ev.type === 'VEVENT' && ev.uid) icalUids.add(ev.uid);
     }
 
-    // UTC-Fenster (gilt für Single-Events UND rrule.between(), da node-ical bereits UTC liefert)
+    // UTC-Import-Fenster (heute Mitternacht UTC → +1 Jahr)
     const now = new Date();
     const utcWindowStart = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
     const utcWindowEnd   = new Date(Date.UTC(now.getFullYear() + 1, now.getMonth(), now.getDate()));
 
-    const importedEvents = [];
+    const dayMs = 86_400_000;
+    let upsertCount = 0;
+    let deletedCount = 0;
+
+    // Pass 1: Alle erwarteten Occurrences importieren; merken welche UIDs/starts erwartet werden
+    const expectedStartsByUid = new Map(); // uid -> Set<ISO-String>
 
     for (const k in parsedCal) {
       if (!Object.prototype.hasOwnProperty.call(parsedCal, k)) continue;
@@ -525,90 +547,124 @@ async function processIcalData(icalUrl) {
       const location = ev.location || null;
       const allDay   = ev.datetype === 'date';
 
-      // ev.start.tz = originaler TZID (nur Logging); node-ical hat bereits korrekt zu UTC konvertiert
-      const tzid = ev.start?.tz || (allDay ? 'allDay' : 'UTC');
+      // ev.start.tz = originaler TZID; node-ical hat ev.start bereits korrekt zu UTC konvertiert (moment-tz).
+      // Für rrule.between() brauchen wir den TZID, um Wall-Time-as-UTC zurückzukonvertieren.
+      const isTzAware = !!ev.start?.tz && !allDay;
+      const tzid = isTzAware ? ev.start.tz : null;
 
       const baseStart  = new Date(ev.start);
       const baseEnd    = ev.end ? new Date(ev.end) : null;
       const durationMs = baseEnd ? baseEnd.getTime() - baseStart.getTime() : 0;
 
-      console.log(`\n  EVENT: ${summary} | tz: ${tzid} | start: ${baseStart.toISOString()}`);
+      console.log(`\n  EVENT: ${summary} | tz: ${tzid || 'UTC'} | start: ${baseStart.toISOString()}`);
+
+      if (!expectedStartsByUid.has(uid)) expectedStartsByUid.set(uid, new Set());
+      const expectedSet = expectedStartsByUid.get(uid);
 
       if (ev.rrule) {
-        // rrule.between() operiert im gleichen UTC-Koordinatensystem wie ev.start (node-ical korrekt)
-        const occurrences = ev.rrule.between(utcWindowStart, utcWindowEnd, true);
+        // node-ical baut den rrule-DTSTART als Wall-Time-as-UTC (ical.js:624:
+        //   "rrule requires the time to be local").
+        // Daher: rrule.between() liefert Wall-Time-as-UTC Dates.
+        // Für TZID-Events: fromZonedTime(occ, tzid) → echtes UTC.
+        // Window für between() muss im gleichen Wall-Time-Koordinatensystem sein.
+        const rruleWinStart = isTzAware ? toZonedTime(utcWindowStart, tzid) : utcWindowStart;
+        const rruleWinEnd   = isTzAware ? toZonedTime(utcWindowEnd,   tzid) : utcWindowEnd;
+        // 1-Tag-Puffer auf jeder Seite: DST-Lücken und -Boundary-Dopplungen abfangen
+        const expandedStart = new Date(rruleWinStart.getTime() - dayMs);
+        const expandedEnd   = new Date(rruleWinEnd.getTime()   + dayMs);
+
+        const occurrences = ev.rrule.between(expandedStart, expandedEnd, true);
 
         for (const occ of occurrences) {
-          // EXDATE-Prüfung (ausgeschlossene Termine)
-          if (ev.exdate) {
-            const occDateStr = occ.toISOString().slice(0, 10);
-            const excluded = Object.values(ev.exdate).some(
-              exd => new Date(exd).toISOString().slice(0, 10) === occDateStr
-            );
-            if (excluded) continue;
-          }
+          // EXDATE-Match in Wall-Time-Domäne (vor UTC-Konvertierung!)
+          if (isExcludedByExdate(ev.exdate, occ)) continue;
 
-          let occStart    = new Date(occ);
-          let occEnd      = durationMs ? new Date(occStart.getTime() + durationMs) : null;
-          let occSummary  = summary;
-          let occLocation = location;
+          // Wall-Time-Occurrence → echtes UTC
+          const occStartUtc = isTzAware ? fromZonedTime(occ, tzid) : new Date(occ);
 
-          // RECURRENCE-ID Overrides (abweichende Instanzen)
-          if (ev.recurrences) {
-            const occDateStr = occ.toISOString().slice(0, 10);
-            const override = Object.values(ev.recurrences).find(
-              r => new Date(r.start).toISOString().slice(0, 10) === occDateStr
-            );
-            if (override) {
-              occStart    = new Date(override.start);
-              occEnd      = override.end ? new Date(override.end) : occEnd;
-              occSummary  = override.summary  || summary;
-              occLocation = override.location || location;
+          // Nachfiltern auf echtes UTC-Fenster (Puffer-Termine herauswerfen)
+          if (occStartUtc < utcWindowStart || occStartUtc > utcWindowEnd) continue;
+
+          // Duration in Wall-Time addieren (DST-sicher: 15:30-16:45 bleibt 1h15m unabhängig vom Offset-Wechsel)
+          let occEnd = null;
+          if (durationMs) {
+            if (isTzAware) {
+              occEnd = fromZonedTime(new Date(occ.getTime() + durationMs), tzid);
+            } else {
+              occEnd = new Date(occStartUtc.getTime() + durationMs);
             }
           }
+
+          let occStart = occStartUtc;
+          let occSummary = summary, occLocation = location;
+
+          // RECURRENCE-ID Override: Abgleich in Wall-Time-Domäne
+          const override = findRecurrenceOverride(ev.recurrences, occ);
+          if (override) {
+            // override.start ist bereits korrektes UTC (node-ical moment-tz für diese Instanz)
+            occStart    = new Date(override.start);
+            occEnd      = override.end ? new Date(override.end) : occEnd;
+            occSummary  = override.summary  || summary;
+            occLocation = override.location || location;
+          }
+
+          expectedSet.add(occStart.toISOString());
 
           try {
-            const exists = await prisma.calendarEvent.findFirst({ where: { uid, start: occStart } });
-            if (!exists) {
-              const created = await prisma.calendarEvent.create({
-                data: { summary: occSummary, location: occLocation, start: occStart, end: occEnd, allDay, uid }
-              });
-              importedEvents.push(created);
-            }
+            await prisma.calendarEvent.upsert({
+              where: { uid_start: { uid, start: occStart } },
+              update: { summary: occSummary, location: occLocation, end: occEnd, allDay },
+              create: { uid, start: occStart, end: occEnd, summary: occSummary, location: occLocation, allDay }
+            });
+            upsertCount++;
           } catch (err) {
             console.error(`  ERROR (recurring ${occStart.toISOString()}): ${err.message}`);
           }
         }
       } else {
-        // Single Event: nur im Fenster speichern
+        // Single Event: ev.start ist bereits korrektes UTC (moment-tz, kein fromZonedTime nötig)
         if (baseStart < utcWindowStart || baseStart > utcWindowEnd) continue;
 
+        expectedSet.add(baseStart.toISOString());
+
         try {
-          const exists = await prisma.calendarEvent.findFirst({ where: { uid, start: baseStart } });
-          if (!exists) {
-            const created = await prisma.calendarEvent.create({
-              data: { summary, location, start: baseStart, end: baseEnd, allDay, uid }
-            });
-            importedEvents.push(created);
-          }
+          await prisma.calendarEvent.upsert({
+            where: { uid_start: { uid, start: baseStart } },
+            update: { summary, location, end: baseEnd, allDay },
+            create: { uid, start: baseStart, end: baseEnd, summary, location, allDay }
+          });
+          upsertCount++;
         } catch (err) {
           console.error(`  ERROR (single ${baseStart.toISOString()}): ${err.message}`);
         }
       }
     }
 
-    // Lösche Events, die nicht mehr im iCal-Feed vorhanden sind
-    const dbEvents = await prisma.calendarEvent.findMany({ where: { uid: { not: null } } });
-    let deletedCount = 0;
-    for (const dbEvent of dbEvents) {
-      if (!icalUids.has(dbEvent.uid)) {
-        await prisma.calendarEvent.delete({ where: { id: dbEvent.id } });
-        deletedCount++;
+    // Pass 2: Stale DB-Rows löschen — Occurrences im Import-Fenster, die nicht mehr erwartet werden
+    // Deckt: EXDATE-Hinzufügungen, UNTIL-Verkürzungen, Single-Event-Verschiebungen, Override-Rücknahmen
+    for (const [uid, expected] of expectedStartsByUid) {
+      const dbRows = await prisma.calendarEvent.findMany({
+        where: { uid, start: { gte: utcWindowStart, lte: utcWindowEnd } }
+      });
+      for (const row of dbRows) {
+        if (!expected.has(row.start.toISOString())) {
+          await prisma.calendarEvent.delete({ where: { id: row.id } });
+          deletedCount++;
+        }
       }
     }
 
-    console.log(`========== SYNC DONE: +${importedEvents.length} imported, -${deletedCount} deleted ==========\n`);
-    return { success: true, imported: importedEvents.length, deleted: deletedCount };
+    // Pass 3: UIDs, die komplett aus dem Feed verschwunden sind (inkl. Events außerhalb des Fensters)
+    const orphaned = await prisma.calendarEvent.findMany({
+      where: { uid: { not: null }, NOT: { uid: { in: [...icalUids] } } }
+    });
+    for (const o of orphaned) {
+      await prisma.calendarEvent.delete({ where: { id: o.id } });
+      deletedCount++;
+    }
+
+    console.log(`========== SYNC DONE: ~${upsertCount} upserted, -${deletedCount} deleted ==========\n`);
+    return { success: true, imported: upsertCount, deleted: deletedCount };
   } catch (e) {
     console.error("Error in processIcalData:", e);
     return { success: false, error: e.message };
@@ -865,7 +921,7 @@ startIcalAutoSyncScheduler();
 // DST-Heuristik) und triggert sofort einen sauberen Re-Import.
 // Läuft nur beim ersten Start nach dem Update, danach no-op.
 async function runOneTimeIcalTzCleanup() {
-  const flagKey = "icalTzCleanup_v1_done";
+  const flagKey = "icalTzCleanup_v2_done";
   try {
     const existing = await prisma.config.findUnique({ where: { key: flagKey } });
     if (existing) return;
