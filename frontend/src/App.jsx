@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   fetchNotes,
   saveNote,
@@ -1249,7 +1250,7 @@ export default function App() {
               <div className="text-red-500 p-2 text-sm">{notesError}</div>
             ) : (
               <div className="prose prose-invert prose-lg max-w-none flex-1 overflow-y-auto">
-                <ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {notesList.length > 0 && notesList[0].content
                     ? notesList[0].content
                     : "*Klicken zum Bearbeiten...*"}
@@ -1304,7 +1305,7 @@ export default function App() {
                   />
                 ) : (
                   <div className="prose prose-invert prose-lg max-w-none flex-1 overflow-y-auto bg-slate-700 p-3 rounded border border-slate-600">
-                    <ReactMarkdown>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {notesModalText || "*Keine Notizen vorhanden*"}
                     </ReactMarkdown>
                   </div>
